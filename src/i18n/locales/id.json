@@ -1,0 +1,87 @@
+{
+  "common": {
+    "loading": "Memuat...",
+    "error": "Terjadi kesalahan",
+    "retry": "Coba lagi",
+    "cancel": "Batal",
+    "confirm": "Konfirmasi",
+    "save": "Simpan",
+    "search": "Cari",
+    "seeAll": "Lihat semua",
+    "noData": "Tidak ada data"
+  },
+  "tabs": {
+    "home": "Beranda",
+    "market": "Pasar",
+    "portfolio": "Portofolio",
+    "profile": "Profil"
+  },
+  "home": {
+    "title": "Temukan Aset",
+    "featuredTitle": "Unggulan",
+    "categoriesTitle": "Kategori",
+    "trendingTitle": "Sedang Tren",
+    "searchPlaceholder": "Cari aset..."
+  },
+  "market": {
+    "title": "Pasar",
+    "buy": "Beli",
+    "sell": "Jual",
+    "price": "Harga",
+    "quantity": "Jumlah",
+    "orderBook": "Buku Order",
+    "recentTrades": "Perdagangan Terkini"
+  },
+  "portfolio": {
+    "title": "Portofolio Saya",
+    "totalValue": "Nilai Total",
+    "holdings": "Kepemilikan Saya",
+    "transactions": "Transaksi",
+    "emptyState": "Anda belum memiliki pecahan"
+  },
+  "profile": {
+    "title": "Profil",
+    "wallet": "Dompet",
+    "settings": "Pengaturan",
+    "language": "Bahasa",
+    "notifications": "Notifikasi",
+    "security": "Keamanan",
+    "helpCenter": "Pusat Bantuan",
+    "logout": "Keluar",
+    "version": "Versi"
+  },
+  "asset": {
+    "totalValue": "Nilai Total",
+    "fractionPrice": "Harga Pecahan",
+    "available": "Tersedia",
+    "sold": "Terjual",
+    "buyFraction": "Beli Pecahan",
+    "fractionCount": "{{count}} pecahan",
+    "serviceFee": "Biaya Layanan (3%)",
+    "totalPayment": "Total Pembayaran",
+    "details": "Detail",
+    "tradingHistory": "Riwayat Perdagangan"
+  },
+  "auth": {
+    "welcome": "Selamat datang di PieceMarket",
+    "subtitle": "Miliki bagian dari aset dunia nyata",
+    "loginWithEmail": "Lanjutkan dengan Email",
+    "loginWithGoogle": "Lanjutkan dengan Google",
+    "loginWithApple": "Lanjutkan dengan Apple"
+  },
+  "wallet": {
+    "balance": "Saldo",
+    "send": "Kirim",
+    "receive": "Terima",
+    "address": "Alamat Dompet",
+    "copied": "Alamat disalin!"
+  },
+  "categories": {
+    "POKEMON_CARDS": "Kartu Pokemon",
+    "KPOP_MERCH": "Merchandise K-Pop",
+    "LUXURY_GOODS": "Barang Mewah",
+    "ART": "Seni",
+    "COLLECTIBLES": "Koleksi",
+    "OTHER": "Lainnya"
+  }
+}

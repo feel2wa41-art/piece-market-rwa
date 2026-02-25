@@ -1,0 +1,87 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "search": "Search",
+    "seeAll": "See all",
+    "noData": "No data available"
+  },
+  "tabs": {
+    "home": "Home",
+    "market": "Market",
+    "portfolio": "Portfolio",
+    "profile": "Profile"
+  },
+  "home": {
+    "title": "Discover Assets",
+    "featuredTitle": "Featured",
+    "categoriesTitle": "Categories",
+    "trendingTitle": "Trending Now",
+    "searchPlaceholder": "Search assets..."
+  },
+  "market": {
+    "title": "Marketplace",
+    "buy": "Buy",
+    "sell": "Sell",
+    "price": "Price",
+    "quantity": "Quantity",
+    "orderBook": "Order Book",
+    "recentTrades": "Recent Trades"
+  },
+  "portfolio": {
+    "title": "My Portfolio",
+    "totalValue": "Total Value",
+    "holdings": "My Holdings",
+    "transactions": "Transactions",
+    "emptyState": "You don't own any fractions yet"
+  },
+  "profile": {
+    "title": "Profile",
+    "wallet": "Wallet",
+    "settings": "Settings",
+    "language": "Language",
+    "notifications": "Notifications",
+    "security": "Security",
+    "helpCenter": "Help Center",
+    "logout": "Log Out",
+    "version": "Version"
+  },
+  "asset": {
+    "totalValue": "Total Value",
+    "fractionPrice": "Fraction Price",
+    "available": "Available",
+    "sold": "Sold",
+    "buyFraction": "Buy Fraction",
+    "fractionCount": "{{count}} fractions",
+    "serviceFee": "Service Fee (3%)",
+    "totalPayment": "Total Payment",
+    "details": "Details",
+    "tradingHistory": "Trading History"
+  },
+  "auth": {
+    "welcome": "Welcome to PieceMarket",
+    "subtitle": "Own a piece of real-world assets",
+    "loginWithEmail": "Continue with Email",
+    "loginWithGoogle": "Continue with Google",
+    "loginWithApple": "Continue with Apple"
+  },
+  "wallet": {
+    "balance": "Balance",
+    "send": "Send",
+    "receive": "Receive",
+    "address": "Wallet Address",
+    "copied": "Address copied!"
+  },
+  "categories": {
+    "POKEMON_CARDS": "Pokemon Cards",
+    "KPOP_MERCH": "K-Pop Merch",
+    "LUXURY_GOODS": "Luxury Goods",
+    "ART": "Art",
+    "COLLECTIBLES": "Collectibles",
+    "OTHER": "Other"
+  }
+}

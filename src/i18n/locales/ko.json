@@ -1,0 +1,87 @@
+{
+  "common": {
+    "loading": "로딩 중...",
+    "error": "오류가 발생했습니다",
+    "retry": "재시도",
+    "cancel": "취소",
+    "confirm": "확인",
+    "save": "저장",
+    "search": "검색",
+    "seeAll": "전체 보기",
+    "noData": "데이터가 없습니다"
+  },
+  "tabs": {
+    "home": "홈",
+    "market": "마켓",
+    "portfolio": "포트폴리오",
+    "profile": "프로필"
+  },
+  "home": {
+    "title": "자산 탐색",
+    "featuredTitle": "추천",
+    "categoriesTitle": "카테고리",
+    "trendingTitle": "인기 자산",
+    "searchPlaceholder": "자산 검색..."
+  },
+  "market": {
+    "title": "마켓플레이스",
+    "buy": "구매",
+    "sell": "판매",
+    "price": "가격",
+    "quantity": "수량",
+    "orderBook": "호가창",
+    "recentTrades": "최근 거래"
+  },
+  "portfolio": {
+    "title": "내 포트폴리오",
+    "totalValue": "총 가치",
+    "holdings": "보유 자산",
+    "transactions": "거래 내역",
+    "emptyState": "아직 보유한 조각이 없습니다"
+  },
+  "profile": {
+    "title": "프로필",
+    "wallet": "지갑",
+    "settings": "설정",
+    "language": "언어",
+    "notifications": "알림",
+    "security": "보안",
+    "helpCenter": "고객센터",
+    "logout": "로그아웃",
+    "version": "버전"
+  },
+  "asset": {
+    "totalValue": "총 가치",
+    "fractionPrice": "조각당 가격",
+    "available": "판매중",
+    "sold": "판매완료",
+    "buyFraction": "조각 구매",
+    "fractionCount": "{{count}}조각",
+    "serviceFee": "서비스 수수료 (3%)",
+    "totalPayment": "총 결제 금액",
+    "details": "상세 정보",
+    "tradingHistory": "거래 내역"
+  },
+  "auth": {
+    "welcome": "PieceMarket에 오신 것을 환영합니다",
+    "subtitle": "실물 자산의 조각을 소유하세요",
+    "loginWithEmail": "이메일로 계속하기",
+    "loginWithGoogle": "Google로 계속하기",
+    "loginWithApple": "Apple로 계속하기"
+  },
+  "wallet": {
+    "balance": "잔액",
+    "send": "보내기",
+    "receive": "받기",
+    "address": "지갑 주소",
+    "copied": "주소가 복사되었습니다!"
+  },
+  "categories": {
+    "POKEMON_CARDS": "포켓몬 카드",
+    "KPOP_MERCH": "K-Pop 굿즈",
+    "LUXURY_GOODS": "명품",
+    "ART": "미술품",
+    "COLLECTIBLES": "수집품",
+    "OTHER": "기타"
+  }
+}
