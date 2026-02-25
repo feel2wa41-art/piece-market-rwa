@@ -1,0 +1,85 @@
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+
+const appDirectory = path.resolve(__dirname);
+
+const babelLoaderConfiguration = {
+  test: /\.(js|jsx|ts|tsx)$/,
+  include: [
+    path.resolve(appDirectory, 'index.web.js'),
+    path.resolve(appDirectory, 'App.tsx'),
+    path.resolve(appDirectory, 'src'),
+    // Include react-native and related packages that need transpiling
+    path.resolve(appDirectory, 'node_modules/react-native'),
+    path.resolve(appDirectory, 'node_modules/@react-navigation'),
+    path.resolve(appDirectory, 'node_modules/react-native-reanimated'),
+    path.resolve(appDirectory, 'node_modules/react-native-gesture-handler'),
+    path.resolve(appDirectory, 'node_modules/react-native-screens'),
+    path.resolve(appDirectory, 'node_modules/react-native-safe-area-context'),
+    path.resolve(appDirectory, 'node_modules/react-native-vector-icons'),
+    path.resolve(appDirectory, 'node_modules/react-native-svg'),
+  ],
+  use: {
+    loader: 'babel-loader',
+    options: {
+      cacheDirectory: true,
+      presets: ['module:@react-native/babel-preset'],
+      plugins: [
+        'react-native-web',
+        'react-native-reanimated/plugin',
+        ['module-resolver', {root: ['.'], alias: {'@': './src'}}],
+      ],
+    },
+  },
+};
+
+const imageLoaderConfiguration = {
+  test: /\.(gif|jpe?g|png|svg)$/,
+  use: {
+    loader: 'url-loader',
+    options: {name: '[name].[ext]'},
+  },
+};
+
+module.exports = {
+  entry: path.resolve(appDirectory, 'index.web.js'),
+  output: {
+    filename: 'bundle.[contenthash].js',
+    path: path.resolve(appDirectory, 'dist'),
+    publicPath: '/',
+    clean: true,
+  },
+  resolve: {
+    alias: {
+      'react-native$': 'react-native-web',
+      'react-native-config': path.resolve(__dirname, 'src/config/env.web.ts'),
+    },
+    extensions: [
+      '.web.tsx',
+      '.web.ts',
+      '.web.js',
+      '.tsx',
+      '.ts',
+      '.js',
+      '.json',
+    ],
+  },
+  module: {
+    rules: [babelLoaderConfiguration, imageLoaderConfiguration],
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.resolve(appDirectory, 'public/index.html'),
+    }),
+    new webpack.DefinePlugin({
+      __DEV__: JSON.stringify(process.env.NODE_ENV !== 'production'),
+      process: {env: {}},
+    }),
+  ],
+  devServer: {
+    port: 3000,
+    historyApiFallback: true,
+    static: {directory: path.resolve(appDirectory, 'public')},
+  },
+};

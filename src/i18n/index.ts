@@ -21,11 +21,17 @@ const languageDetector = {
       }
     } catch {}
 
-    const deviceLang =
-      Platform.OS === 'ios'
-        ? NativeModules.SettingsManager?.settings?.AppleLocale ||
-          NativeModules.SettingsManager?.settings?.AppleLanguages?.[0]
-        : NativeModules.I18nManager?.localeIdentifier;
+    let deviceLang: string | undefined;
+    if (Platform.OS === 'web') {
+      deviceLang =
+        typeof navigator !== 'undefined' ? navigator.language : undefined;
+    } else if (Platform.OS === 'ios') {
+      deviceLang =
+        NativeModules.SettingsManager?.settings?.AppleLocale ||
+        NativeModules.SettingsManager?.settings?.AppleLanguages?.[0];
+    } else {
+      deviceLang = NativeModules.I18nManager?.localeIdentifier;
+    }
 
     const code = deviceLang?.split(/[-_]/)[0] || 'en';
     const supported = ['en', 'ko', 'id'];
