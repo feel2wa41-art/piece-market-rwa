@@ -1,21 +1,59 @@
-import React from 'react';
-import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  FlatList,
+} from 'react-native';
 import {useTranslation} from 'react-i18next';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {SearchBar} from '../../components/common';
+import {AssetCard} from '../../components/asset';
+import {MOCK_ASSETS} from '../../data/mockAssets';
 import {COLORS, FONT_SIZE, SPACING} from '../../constants/theme';
+import {MarketStackParamList} from '../../navigation/types';
+
+type Nav = NativeStackNavigationProp<MarketStackParamList>;
 
 export function MarketScreen() {
   const {t} = useTranslation();
+  const navigation = useNavigation<Nav>();
+  const [search, setSearch] = useState('');
+
+  const filtered = MOCK_ASSETS.filter(a =>
+    a.title.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>{t('market.title')}</Text>
-      </View>
-      <View style={styles.body}>
-        <View style={styles.placeholder}>
-          <Text style={styles.placeholderText}>{t('market.orderBook')}</Text>
+        <View style={styles.searchWrap}>
+          <SearchBar
+            value={search}
+            onChangeText={setSearch}
+            placeholder={t('home.searchPlaceholder')}
+          />
         </View>
+        <Text style={styles.count}>
+          {filtered.length} items
+        </Text>
       </View>
+      <FlatList
+        data={filtered}
+        keyExtractor={item => item.id}
+        contentContainerStyle={styles.list}
+        renderItem={({item}) => (
+          <AssetCard
+            asset={item}
+            onPress={() =>
+              navigation.navigate('AssetDetail', {assetId: item.id})
+            }
+          />
+        )}
+      />
     </SafeAreaView>
   );
 }
@@ -34,23 +72,17 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: COLORS.text,
   },
-  body: {
-    flex: 1,
+  searchWrap: {
+    marginTop: SPACING.md,
+  },
+  count: {
+    fontSize: FONT_SIZE.sm,
+    color: COLORS.textSecondary,
+    marginTop: SPACING.sm,
+    marginBottom: SPACING.sm,
+  },
+  list: {
     paddingHorizontal: SPACING.xl,
-    paddingTop: SPACING.xxl,
-  },
-  placeholder: {
-    flex: 1,
-    backgroundColor: COLORS.surface,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderStyle: 'dashed',
-  },
-  placeholderText: {
-    color: COLORS.textTertiary,
-    fontSize: FONT_SIZE.md,
+    paddingBottom: SPACING.xxxl,
   },
 });
