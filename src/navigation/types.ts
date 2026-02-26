@@ -14,23 +14,28 @@ export type RootStackParamList = {
 export type MainTabParamList = {
   HomeTab: NavigatorScreenParams<HomeStackParamList>;
   MarketTab: NavigatorScreenParams<MarketStackParamList>;
+  SwapTab: NavigatorScreenParams<SwapStackParamList>;
   PortfolioTab: NavigatorScreenParams<PortfolioStackParamList>;
+  AdminTab?: NavigatorScreenParams<AdminStackParamList>;
   ProfileTab: NavigatorScreenParams<ProfileStackParamList>;
 };
 
 export type HomeStackParamList = {
   Home: undefined;
   AssetDetail: {assetId: string};
+  AssetCertificate: {assetId: string};
 };
 
 export type MarketStackParamList = {
   Market: undefined;
   AssetDetail: {assetId: string};
+  AssetCertificate: {assetId: string};
 };
 
 export type PortfolioStackParamList = {
   Portfolio: undefined;
   AssetDetail: {assetId: string};
+  AssetCertificate: {assetId: string};
   TransactionHistory: undefined;
 };
 
@@ -38,6 +43,18 @@ export type ProfileStackParamList = {
   Profile: undefined;
   LanguageSettings: undefined;
   WalletDetail: undefined;
+  SellerRegistration: undefined;
+};
+
+export type SwapStackParamList = {
+  SwapMarket: undefined;
+  SwapDetail: {swapId: string};
+  CreateSwap: undefined;
+};
+
+export type AdminStackParamList = {
+  AdminDashboard: undefined;
+  RevenueWithdrawal: undefined;
 };
 
 export type RootScreenProps<T extends keyof RootStackParamList> =

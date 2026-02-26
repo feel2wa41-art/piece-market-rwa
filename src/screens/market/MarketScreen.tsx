@@ -11,7 +11,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {SearchBar} from '../../components/common';
 import {AssetCard} from '../../components/asset';
-import {MOCK_ASSETS} from '../../data/mockAssets';
+import {useAssetStore} from '../../store/useAssetStore';
 import {COLORS, FONT_SIZE, SPACING} from '../../constants/theme';
 import {MarketStackParamList} from '../../navigation/types';
 
@@ -21,8 +21,9 @@ export function MarketScreen() {
   const {t} = useTranslation();
   const navigation = useNavigation<Nav>();
   const [search, setSearch] = useState('');
+  const assets = useAssetStore(s => s.assets);
 
-  const filtered = MOCK_ASSETS.filter(a =>
+  const filtered = assets.filter(a =>
     a.title.toLowerCase().includes(search.toLowerCase()),
   );
 

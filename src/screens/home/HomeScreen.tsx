@@ -12,7 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {SearchBar, SectionHeader} from '../../components/common';
 import {AssetCard, CategoryChip} from '../../components/asset';
-import {MOCK_ASSETS} from '../../data/mockAssets';
+import {useAssetStore} from '../../store/useAssetStore';
 import {COLORS, FONT_SIZE, SPACING} from '../../constants/theme';
 import {HomeStackParamList} from '../../navigation/types';
 import {AssetCategory} from '../../types/asset';
@@ -33,12 +33,13 @@ export function HomeScreen() {
   const navigation = useNavigation<Nav>();
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
+  const assets = useAssetStore(s => s.assets);
 
-  const featured = MOCK_ASSETS.slice(0, 4);
+  const featured = assets.slice(0, 4);
   const filtered =
     selectedCategory === 'ALL'
-      ? MOCK_ASSETS
-      : MOCK_ASSETS.filter(a => a.category === selectedCategory);
+      ? assets
+      : assets.filter(a => a.category === selectedCategory);
   const trending = filtered.filter(a =>
     a.title.toLowerCase().includes(search.toLowerCase()),
   );

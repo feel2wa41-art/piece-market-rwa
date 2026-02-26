@@ -1,9 +1,10 @@
-export type TransactionType = 'BUY' | 'SELL' | 'TRANSFER';
+export type TransactionType = 'BUY' | 'SELL' | 'TRANSFER' | 'LISTING' | 'WITHDRAWAL';
 export type TransactionStatus = 'PENDING' | 'CONFIRMED' | 'FAILED';
 
 export interface Transaction {
   id: string;
   type: TransactionType;
+  userId?: string;
   assetId: string;
   assetTitle: string;
   fractionCount: number;

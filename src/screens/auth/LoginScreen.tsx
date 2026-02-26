@@ -1,39 +1,39 @@
 import React from 'react';
-import {View, Text, StyleSheet, SafeAreaView, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, SafeAreaView, ScrollView} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {useAuthStore} from '../../store/useAuthStore';
-import {COLORS, FONT_SIZE, SPACING, BORDER_RADIUS} from '../../constants/theme';
+import {useWalletStore} from '../../store/useWalletStore';
+import {useAssetStore} from '../../store/useAssetStore';
+import {UserSwitcher} from '../../components/demo/UserSwitcher';
+import {User} from '../../types/user';
+import {COLORS, FONT_SIZE, SPACING} from '../../constants/theme';
 
 export function LoginScreen() {
   const {t} = useTranslation();
-  const login = useAuthStore(state => state.login);
+  const loginAsDemoUser = useAuthStore(state => state.loginAsDemoUser);
+  const initForUser = useWalletStore(state => state.initForUser);
+  const seedDemoPortfolio = useAssetStore(state => state.seedDemoPortfolio);
 
-  const handleLogin = () => {
-    // Temporary: skip auth for development
-    login({id: 'dev-user', email: 'dev@piecemarket.io'});
+  const handleSelectUser = (user: User) => {
+    loginAsDemoUser(user);
+    initForUser(user.walletAddress);
+    if (user.role === 'INVESTOR') {
+      seedDemoPortfolio();
+    }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.hero}>
-        <Text style={styles.logo}>PieceMarket</Text>
-        <Text style={styles.title}>{t('auth.welcome')}</Text>
-        <Text style={styles.subtitle}>{t('auth.subtitle')}</Text>
-      </View>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.hero}>
+          <Text style={styles.logo}>PieceMarket</Text>
+          <Text style={styles.subtitle}>{t('auth.subtitle')}</Text>
+        </View>
 
-      <View style={styles.buttons}>
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>{t('auth.loginWithEmail')}</Text>
-        </TouchableOpacity>
+        <UserSwitcher onSelectUser={handleSelectUser} />
 
-        <TouchableOpacity
-          style={[styles.button, styles.buttonOutline]}
-          onPress={handleLogin}>
-          <Text style={[styles.buttonText, styles.buttonOutlineText]}>
-            {t('auth.loginWithGoogle')}
-          </Text>
-        </TouchableOpacity>
-      </View>
+        <Text style={styles.demoNote}>{t('demo.demoNote')}</Text>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -43,52 +43,31 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
   },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: SPACING.xxxl,
+  },
   hero: {
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    paddingVertical: SPACING.xxxl,
     paddingHorizontal: SPACING.xxl,
   },
   logo: {
     fontSize: 40,
     fontWeight: '800',
     color: COLORS.primary,
-    marginBottom: SPACING.lg,
-  },
-  title: {
-    fontSize: FONT_SIZE.xxl,
-    fontWeight: '700',
-    color: COLORS.text,
-    textAlign: 'center',
+    marginBottom: SPACING.sm,
   },
   subtitle: {
     fontSize: FONT_SIZE.md,
     color: COLORS.textSecondary,
     textAlign: 'center',
-    marginTop: SPACING.sm,
   },
-  buttons: {
+  demoNote: {
+    fontSize: FONT_SIZE.xs,
+    color: COLORS.textTertiary,
+    textAlign: 'center',
+    marginTop: SPACING.xxl,
     paddingHorizontal: SPACING.xxl,
-    paddingBottom: SPACING.xxxl,
-    gap: SPACING.md,
-  },
-  button: {
-    backgroundColor: COLORS.primary,
-    paddingVertical: SPACING.lg,
-    borderRadius: BORDER_RADIUS.md,
-    alignItems: 'center',
-  },
-  buttonText: {
-    fontSize: FONT_SIZE.md,
-    fontWeight: '600',
-    color: COLORS.white,
-  },
-  buttonOutline: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  buttonOutlineText: {
-    color: COLORS.text,
   },
 });

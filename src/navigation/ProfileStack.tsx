@@ -3,6 +3,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {ProfileStackParamList} from './types';
 import {ProfileScreen} from '../screens/profile/ProfileScreen';
 import {LanguageSettingsScreen} from '../screens/profile/LanguageSettingsScreen';
+import {WalletDetailScreen} from '../screens/wallet/WalletDetailScreen';
+import {SellerRegistrationScreen} from '../screens/seller/SellerRegistrationScreen';
 
 const Stack = createNativeStackNavigator<ProfileStackParamList>();
 
@@ -17,6 +19,16 @@ export function ProfileStack() {
       <Stack.Screen
         name="LanguageSettings"
         component={LanguageSettingsScreen}
+      />
+      <Stack.Screen
+        name="WalletDetail"
+        component={WalletDetailScreen}
+        options={{title: 'Wallet'}}
+      />
+      <Stack.Screen
+        name="SellerRegistration"
+        component={SellerRegistrationScreen}
+        options={{title: 'Register Asset'}}
       />
     </Stack.Navigator>
   );

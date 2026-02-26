@@ -10,10 +10,10 @@ import {
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {EmptyState} from '../../components/common';
+import {EmptyState, Button, AssetImage} from '../../components/common';
 import {ProgressBar} from '../../components/asset';
-import {MOCK_PORTFOLIO} from '../../data/mockAssets';
-import {formatCurrency} from '../../utils/format';
+import {useAssetStore} from '../../store/useAssetStore';
+import {formatUSDC} from '../../utils/format';
 import {COLORS, FONT_SIZE, SPACING, BORDER_RADIUS} from '../../constants/theme';
 import {PortfolioStackParamList} from '../../navigation/types';
 
@@ -22,11 +22,10 @@ type Nav = NativeStackNavigationProp<PortfolioStackParamList>;
 export function PortfolioScreen() {
   const {t} = useTranslation();
   const navigation = useNavigation<Nav>();
+  const portfolio = useAssetStore(s => s.portfolio);
+  const getPortfolioValue = useAssetStore(s => s.getPortfolioValue);
 
-  const totalValue = MOCK_PORTFOLIO.reduce(
-    (sum, a) => sum + a.ownedFractions * a.unitPrice,
-    0,
-  );
+  const totalValue = getPortfolioValue();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -36,50 +35,55 @@ export function PortfolioScreen() {
 
       <View style={styles.summaryCard}>
         <Text style={styles.summaryLabel}>{t('portfolio.totalValue')}</Text>
-        <Text style={styles.summaryValue}>{formatCurrency(totalValue)}</Text>
+        <Text style={styles.summaryValue}>{formatUSDC(totalValue)}</Text>
         <Text style={styles.summaryCount}>
-          {MOCK_PORTFOLIO.length} {t('portfolio.holdings').toLowerCase()}
+          {portfolio.length} {t('portfolio.holdings').toLowerCase()}
         </Text>
       </View>
 
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>{t('portfolio.holdings')}</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('TransactionHistory')}>
+          <Text style={styles.seeHistory}>{t('portfolio.transactions')}</Text>
+        </TouchableOpacity>
       </View>
 
-      {MOCK_PORTFOLIO.length === 0 ? (
+      {portfolio.length === 0 ? (
         <EmptyState icon="📦" message={t('portfolio.emptyState')} />
       ) : (
         <FlatList
-          data={MOCK_PORTFOLIO}
-          keyExtractor={item => item.id}
+          data={portfolio}
+          keyExtractor={item => item.asset.id}
           contentContainerStyle={styles.list}
-          renderItem={({item}) => (
-            <TouchableOpacity
-              style={styles.holdingCard}
-              onPress={() =>
-                navigation.navigate('AssetDetail', {assetId: item.id})
-              }>
-              <View style={styles.holdingIcon}>
-                <Text style={{fontSize: 24}}>🖼️</Text>
-              </View>
-              <View style={styles.holdingInfo}>
-                <Text style={styles.holdingTitle} numberOfLines={1}>
-                  {item.title}
+          renderItem={({item}) => {
+            return (
+              <TouchableOpacity
+                style={styles.holdingCard}
+                onPress={() =>
+                  navigation.navigate('AssetDetail', {assetId: item.asset.id})
+                }>
+                <View style={styles.holdingIcon}>
+                  <AssetImage source={item.asset.imageUrl} />
+                </View>
+                <View style={styles.holdingInfo}>
+                  <Text style={styles.holdingTitle} numberOfLines={1}>
+                    {item.asset.title}
+                  </Text>
+                  <Text style={styles.holdingFractions}>
+                    {item.ownedFractions} {t('asset.fractionCount', {count: item.ownedFractions})}
+                  </Text>
+                  <ProgressBar
+                    current={item.asset.soldFractions}
+                    total={item.asset.fractionCount}
+                    showLabel={false}
+                  />
+                </View>
+                <Text style={styles.holdingValue}>
+                  {formatUSDC(item.ownedFractions * item.asset.unitPrice)}
                 </Text>
-                <Text style={styles.holdingFractions}>
-                  {item.ownedFractions} {t('asset.fractionCount', {count: item.ownedFractions})}
-                </Text>
-                <ProgressBar
-                  current={item.soldFractions}
-                  total={item.fractionCount}
-                  showLabel={false}
-                />
-              </View>
-              <Text style={styles.holdingValue}>
-                {formatCurrency(item.ownedFractions * item.unitPrice)}
-              </Text>
-            </TouchableOpacity>
-          )}
+              </TouchableOpacity>
+            );
+          }}
         />
       )}
     </SafeAreaView>
@@ -124,11 +128,19 @@ const styles = StyleSheet.create({
   sectionHeader: {
     paddingHorizontal: SPACING.xl,
     marginBottom: SPACING.md,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   sectionTitle: {
     fontSize: FONT_SIZE.lg,
     fontWeight: '600',
     color: COLORS.text,
+  },
+  seeHistory: {
+    fontSize: FONT_SIZE.sm,
+    color: COLORS.primary,
+    fontWeight: '500',
   },
   list: {
     paddingHorizontal: SPACING.xl,
@@ -147,8 +159,7 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: BORDER_RADIUS.sm,
     backgroundColor: COLORS.white,
-    justifyContent: 'center',
-    alignItems: 'center',
+    overflow: 'hidden',
     marginRight: SPACING.md,
   },
   holdingInfo: {

@@ -1,8 +1,9 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {RWAAsset} from '../../types/asset';
 import {ProgressBar} from './ProgressBar';
+import {AssetImage} from '../common/AssetImage';
 import {formatCurrency} from '../../utils/format';
 import {COLORS, FONT_SIZE, SPACING, BORDER_RADIUS} from '../../constants/theme';
 
@@ -19,7 +20,7 @@ export function AssetCard({asset, onPress, compact = false}: AssetCardProps) {
     return (
       <TouchableOpacity style={styles.compactCard} onPress={onPress} activeOpacity={0.7}>
         <View style={styles.compactImage}>
-          <Text style={styles.imagePlaceholder}>🖼️</Text>
+          <AssetImage source={asset.imageUrl} />
         </View>
         <Text style={styles.compactTitle} numberOfLines={1}>
           {asset.title}
@@ -34,7 +35,7 @@ export function AssetCard({asset, onPress, compact = false}: AssetCardProps) {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.7}>
       <View style={styles.imageContainer}>
-        <Text style={styles.imagePlaceholder}>🖼️</Text>
+        <AssetImage source={asset.imageUrl} />
         <View style={styles.badge}>
           <Text style={styles.badgeText}>
             {t(`categories.${asset.category}`)}
@@ -70,11 +71,6 @@ const styles = StyleSheet.create({
   imageContainer: {
     height: 160,
     backgroundColor: COLORS.surface,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  imagePlaceholder: {
-    fontSize: 40,
   },
   badge: {
     position: 'absolute',
@@ -127,8 +123,6 @@ const styles = StyleSheet.create({
   compactImage: {
     height: 100,
     backgroundColor: COLORS.surface,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   compactTitle: {
     fontSize: FONT_SIZE.sm,

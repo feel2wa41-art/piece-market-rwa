@@ -24,7 +24,9 @@ const babelLoaderConfiguration = {
     loader: 'babel-loader',
     options: {
       cacheDirectory: true,
-      presets: ['module:@react-native/babel-preset'],
+      presets: [
+            ['module:@react-native/babel-preset', {disableImportExportTransform: true}],
+          ],
       plugins: [
         'react-native-web',
         'react-native-reanimated/plugin',
@@ -36,9 +38,9 @@ const babelLoaderConfiguration = {
 
 const imageLoaderConfiguration = {
   test: /\.(gif|jpe?g|png|svg)$/,
-  use: {
-    loader: 'url-loader',
-    options: {name: '[name].[ext]'},
+  type: 'asset',
+  generator: {
+    filename: 'images/[name].[hash:8][ext]',
   },
 };
 
@@ -66,8 +68,17 @@ module.exports = {
     ],
   },
   module: {
-    rules: [babelLoaderConfiguration, imageLoaderConfiguration],
+    rules: [
+      // Disable fullySpecified for ESM packages in node_modules
+      {
+        test: /\.m?js/,
+        resolve: {fullySpecified: false},
+      },
+      babelLoaderConfiguration,
+      imageLoaderConfiguration,
+    ],
   },
+  ignoreWarnings: [/react-native-reanimated/],
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(appDirectory, 'public/index.html'),
@@ -81,5 +92,6 @@ module.exports = {
     port: 3000,
     historyApiFallback: true,
     static: {directory: path.resolve(appDirectory, 'public')},
+    client: {overlay: {warnings: false}},
   },
 };
