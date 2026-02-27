@@ -5,6 +5,7 @@ import {ProfileScreen} from '../screens/profile/ProfileScreen';
 import {LanguageSettingsScreen} from '../screens/profile/LanguageSettingsScreen';
 import {WalletDetailScreen} from '../screens/wallet/WalletDetailScreen';
 import {SellerRegistrationScreen} from '../screens/seller/SellerRegistrationScreen';
+import {DocsScreen} from '../screens/profile/DocsScreen';
 
 const Stack = createNativeStackNavigator<ProfileStackParamList>();
 
@@ -29,6 +30,11 @@ export function ProfileStack() {
         name="SellerRegistration"
         component={SellerRegistrationScreen}
         options={{title: 'Register Asset'}}
+      />
+      <Stack.Screen
+        name="Docs"
+        component={DocsScreen}
+        options={{title: 'Documents'}}
       />
     </Stack.Navigator>
   );

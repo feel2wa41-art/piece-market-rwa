@@ -50,6 +50,7 @@ export const linking: LinkingOptions<RootStackParamList> = {
               LanguageSettings: 'profile/language',
               WalletDetail: 'profile/wallet',
               SellerRegistration: 'profile/seller-register',
+              Docs: 'profile/docs',
             },
           },
         },

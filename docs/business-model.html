@@ -1,0 +1,2306 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PieceMarket - Business Model & Cost Structure</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    :root {
+      --primary: #2563EB;
+      --primary-light: #3B82F6;
+      --primary-dark: #1D4ED8;
+      --accent: #10B981;
+      --accent-light: #34D399;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --purple: #8B5CF6;
+      --pink: #EC4899;
+      --bg: #0F172A;
+      --bg-card: #1E293B;
+      --bg-card-hover: #334155;
+      --text: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --border: #334155;
+      --glow-blue: rgba(37, 99, 235, 0.3);
+      --glow-green: rgba(16, 185, 129, 0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 60% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px 24px;
+    }
+
+    /* ===== Header ===== */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .logo-icon {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--primary), var(--purple));
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 8px 32px var(--glow-blue);
+    }
+
+    .logo-text {
+      font-size: 28px; font-weight: 800;
+      background: linear-gradient(135deg, var(--text) 0%, var(--text-secondary) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .header h1 {
+      font-size: 40px; font-weight: 900; line-height: 1.15; margin-bottom: 10px;
+      background: linear-gradient(135deg, #fff 30%, var(--primary-light) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .header .subtitle { font-size: 17px; color: var(--text-secondary); }
+
+    .badge {
+      display: inline-block; padding: 6px 16px; border-radius: 50px;
+      font-size: 13px; font-weight: 600; margin-top: 14px;
+    }
+
+    .badge-blue {
+      background: rgba(37, 99, 235, 0.15); color: var(--primary-light);
+      border: 1px solid rgba(37, 99, 235, 0.3);
+    }
+
+    /* ===== Tab Navigation ===== */
+    .tab-nav {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 36px;
+      background: var(--bg-card);
+      padding: 6px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tab-nav::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 120px;
+      padding: 14px 16px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      box-shadow: 0 4px 20px var(--glow-blue);
+    }
+
+    .tab-btn .tab-icon { font-size: 18px; }
+
+    /* ===== Tab Content ===== */
+    .tab-content { display: none; animation: fadeIn 0.35s ease; }
+    .tab-content.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Section ===== */
+    .section { margin-bottom: 48px; }
+
+    .section-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--primary-light); margin-bottom: 12px;
+    }
+
+    .section-label::before {
+      content: ''; width: 20px; height: 2px;
+      background: var(--primary); border-radius: 1px;
+    }
+
+    .section h2 { font-size: 30px; font-weight: 800; margin-bottom: 6px; }
+    .section .desc { color: var(--text-secondary); font-size: 15px; margin-bottom: 28px; }
+
+    /* ===== Fee Cards ===== */
+    .fee-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+    }
+
+    .fee-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 22px;
+      transition: all 0.3s ease; position: relative; overflow: hidden;
+    }
+
+    .fee-card:hover { transform: translateY(-2px); border-color: var(--primary); }
+
+    .fee-card::after {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 100%; height: 3px;
+    }
+
+    .fee-card.buy::after { background: linear-gradient(90deg, var(--primary), var(--primary-light)); }
+    .fee-card.sell::after { background: linear-gradient(90deg, var(--accent), var(--accent-light)); }
+    .fee-card.listing::after { background: linear-gradient(90deg, var(--purple), #A78BFA); }
+    .fee-card.swap::after { background: linear-gradient(90deg, var(--pink), #F472B6); }
+    .fee-card.gas::after { background: linear-gradient(90deg, var(--warning), #FBBF24); }
+
+    .fee-card .fee-label { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 6px; }
+    .fee-card .fee-rate { font-size: 34px; font-weight: 900; margin-bottom: 2px; }
+    .fee-card.buy .fee-rate { color: var(--primary-light); }
+    .fee-card.sell .fee-rate { color: var(--accent-light); }
+    .fee-card.listing .fee-rate { color: #A78BFA; }
+    .fee-card.swap .fee-rate { color: #F472B6; }
+    .fee-card.gas .fee-rate { color: #FBBF24; }
+    .fee-card .fee-desc { font-size: 13px; color: var(--text-secondary); }
+    .fee-card .fee-example {
+      margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
+      font-size: 12px; color: var(--text-muted);
+    }
+    .fee-card .fee-example strong { color: var(--text-secondary); }
+
+    /* ===== Revenue Box ===== */
+    .revenue-box {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(37, 99, 235, 0.08));
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 20px; padding: 32px; margin-top: 28px;
+    }
+
+    .revenue-box h3 {
+      font-size: 19px; font-weight: 700; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .revenue-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .revenue-item { text-align: center; }
+    .revenue-item .label { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
+    .revenue-item .value { font-size: 26px; font-weight: 800; color: var(--accent-light); }
+    .revenue-item .sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+    /* ===== Flow Diagram ===== */
+    .flow-row {
+      display: grid;
+      grid-template-columns: 1fr 50px 1fr 50px 1fr;
+      align-items: stretch; gap: 0; margin-bottom: 20px;
+    }
+
+    .flow-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px 20px;
+      transition: all 0.3s ease;
+    }
+
+    .flow-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 8px 40px var(--glow-blue);
+      transform: translateY(-2px);
+    }
+
+    .flow-card .icon {
+      width: 42px; height: 42px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin-bottom: 14px;
+    }
+
+    .flow-card .icon.blue { background: rgba(37, 99, 235, 0.15); }
+    .flow-card .icon.green { background: rgba(16, 185, 129, 0.15); }
+    .flow-card .icon.purple { background: rgba(139, 92, 246, 0.15); }
+    .flow-card .icon.pink { background: rgba(236, 72, 153, 0.15); }
+    .flow-card .icon.yellow { background: rgba(245, 158, 11, 0.15); }
+    .flow-card .icon.cyan { background: rgba(6, 182, 212, 0.15); }
+
+    .flow-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
+    .flow-card p { color: var(--text-secondary); font-size: 13px; line-height: 1.5; }
+
+    .flow-card .amount {
+      margin-top: 10px; padding: 7px 10px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 8px; font-size: 13px;
+      color: var(--accent-light); font-weight: 600;
+    }
+
+    .flow-card .amount.cost {
+      background: rgba(239, 68, 68, 0.08);
+      border-color: rgba(239, 68, 68, 0.2); color: #F87171;
+    }
+
+    .flow-card .amount.info {
+      background: rgba(37, 99, 235, 0.08);
+      border-color: rgba(37, 99, 235, 0.2); color: var(--primary-light);
+    }
+
+    .flow-arrow {
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 18px;
+    }
+
+    .flow-arrow span {
+      background: var(--bg-card); border: 1px solid var(--border);
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 14px;
+    }
+
+    .flow-section-title {
+      font-size: 15px; font-weight: 700; margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .flow-section-title .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+
+    /* ===== Step Cards (거래 흐름) ===== */
+    .steps-container { display: flex; flex-direction: column; gap: 0; }
+
+    .step-row {
+      display: flex; align-items: flex-start; gap: 20px;
+    }
+
+    .step-line {
+      display: flex; flex-direction: column; align-items: center;
+      width: 48px; flex-shrink: 0;
+    }
+
+    .step-num {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 800; flex-shrink: 0;
+    }
+
+    .step-num.blue { background: rgba(37, 99, 235, 0.15); color: var(--primary-light); }
+    .step-num.green { background: rgba(16, 185, 129, 0.15); color: var(--accent-light); }
+    .step-num.purple { background: rgba(139, 92, 246, 0.15); color: #A78BFA; }
+    .step-num.pink { background: rgba(236, 72, 153, 0.15); color: #F472B6; }
+    .step-num.yellow { background: rgba(245, 158, 11, 0.15); color: #FBBF24; }
+
+    .step-connector {
+      width: 2px; flex: 1; min-height: 20px;
+      background: var(--border); margin: 4px 0;
+    }
+
+    .step-body {
+      flex: 1; padding-bottom: 24px;
+    }
+
+    .step-body h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .step-body p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+    .step-body .step-detail {
+      margin-top: 10px; padding: 12px 16px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 10px; font-size: 13px; color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .step-body .step-detail strong { color: var(--text); }
+
+    /* ===== Charge Methods ===== */
+    .charge-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+    }
+
+    .charge-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 32px; position: relative; overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .charge-card:hover {
+      transform: translateY(-2px); border-color: var(--primary);
+    }
+
+    .charge-card::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 100%; height: 3px;
+    }
+
+    .charge-card.card-type::before { background: linear-gradient(90deg, var(--primary), var(--purple)); }
+    .charge-card.crypto-type::before { background: linear-gradient(90deg, var(--warning), #F97316); }
+
+    .charge-card .charge-icon {
+      width: 56px; height: 56px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; margin-bottom: 20px;
+    }
+
+    .charge-card.card-type .charge-icon { background: rgba(37, 99, 235, 0.12); }
+    .charge-card.crypto-type .charge-icon { background: rgba(245, 158, 11, 0.12); }
+
+    .charge-card h3 { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .charge-card .charge-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+
+    .charge-step {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .charge-step:last-child { border-bottom: none; }
+
+    .charge-step .cs-num {
+      width: 24px; height: 24px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+    }
+
+    .card-type .cs-num { background: rgba(37, 99, 235, 0.15); color: var(--primary-light); }
+    .crypto-type .cs-num { background: rgba(245, 158, 11, 0.15); color: #FBBF24; }
+
+    .charge-step .cs-text { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+    .charge-step .cs-text strong { color: var(--text); }
+
+    .charge-tag {
+      display: inline-block; margin-top: 16px; padding: 6px 14px;
+      border-radius: 50px; font-size: 12px; font-weight: 700;
+    }
+
+    .charge-tag.easy {
+      background: rgba(37, 99, 235, 0.12); color: var(--primary-light);
+      border: 1px solid rgba(37, 99, 235, 0.25);
+    }
+
+    .charge-tag.pro {
+      background: rgba(245, 158, 11, 0.12); color: #FBBF24;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    /* ===== Compare / Cost Tables ===== */
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
+
+    .compare-card { border-radius: 16px; padding: 28px; position: relative; }
+
+    .compare-card.recommend {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(139, 92, 246, 0.08));
+      border: 2px solid var(--primary); box-shadow: 0 8px 40px var(--glow-blue);
+    }
+
+    .compare-card.other {
+      background: var(--bg-card); border: 1px solid var(--border);
+    }
+
+    .compare-card .rec-badge {
+      position: absolute; top: -12px; right: 20px;
+      background: linear-gradient(135deg, var(--primary), var(--purple));
+      color: white; padding: 4px 16px; border-radius: 50px;
+      font-size: 12px; font-weight: 700;
+    }
+
+    .compare-card h4 { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+    .compare-card .sub { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+
+    .compare-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .compare-item:last-child { border-bottom: none; }
+    .compare-item .label { font-size: 14px; color: var(--text-secondary); }
+    .compare-item .val { font-weight: 700; font-size: 14px; }
+    .compare-item .val.free { color: var(--accent-light); }
+    .compare-item .val.cost { color: #FBBF24; }
+
+    /* ===== Cost Table ===== */
+    .cost-table {
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      overflow: hidden; border-radius: 16px; border: 1px solid var(--border);
+    }
+
+    .cost-table thead th {
+      background: var(--bg-card); padding: 14px 18px;
+      text-align: left; font-size: 13px; font-weight: 600;
+      color: var(--text-secondary); text-transform: uppercase;
+      letter-spacing: 0.5px; border-bottom: 1px solid var(--border);
+    }
+
+    .cost-table tbody td {
+      padding: 14px 18px; font-size: 14px;
+      border-bottom: 1px solid var(--border); background: var(--bg);
+    }
+
+    .cost-table tbody tr:last-child td { border-bottom: none; }
+    .cost-table tbody tr:hover td { background: var(--bg-card); }
+    .cost-table .provider { font-weight: 600; }
+
+    .free-tag {
+      display: inline-block; padding: 3px 10px;
+      background: rgba(16, 185, 129, 0.15); color: var(--accent-light);
+      border-radius: 50px; font-size: 12px; font-weight: 700;
+    }
+
+    .paid-tag {
+      display: inline-block; padding: 3px 10px;
+      background: rgba(245, 158, 11, 0.15); color: #FBBF24;
+      border-radius: 50px; font-size: 12px; font-weight: 700;
+    }
+
+    /* ===== Monthly Box ===== */
+    .monthly-box {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 32px; margin-top: 28px;
+      position: relative; overflow: hidden;
+    }
+
+    .monthly-box::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent), var(--purple));
+    }
+
+    .monthly-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 20px; margin-top: 20px;
+    }
+
+    .monthly-item {
+      text-align: center; padding: 18px; border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .monthly-item .emoji { font-size: 26px; margin-bottom: 6px; }
+    .monthly-item .label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; font-weight: 500; }
+    .monthly-item .price { font-size: 22px; font-weight: 800; }
+    .monthly-item .price.free { color: var(--accent-light); }
+    .monthly-item .price.low { color: #FBBF24; }
+    .monthly-item .note { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+    /* ===== Total Row ===== */
+    .total-row {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 24px; padding: 18px 22px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+      border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px;
+    }
+
+    .total-row .total-label { font-size: 15px; font-weight: 600; }
+    .total-row .total-value { font-size: 30px; font-weight: 900; color: var(--accent-light); }
+    .total-row .total-note { font-size: 13px; color: var(--text-secondary); }
+
+    /* ===== Highlight Box ===== */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(139, 92, 246, 0.05));
+      border: 1px solid rgba(37, 99, 235, 0.2); border-radius: 16px;
+      padding: 22px 24px; margin-top: 20px;
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+
+    .highlight-box .hl-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .highlight-box .hl-text h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .highlight-box .hl-text p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* ===== Charge Comparison Table ===== */
+    .charge-compare {
+      margin-top: 28px; background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: 16px; padding: 28px;
+    }
+
+    .charge-compare h3 {
+      font-size: 18px; font-weight: 700; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .cc-row {
+      display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 12px; padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .cc-row:last-child { border-bottom: none; }
+    .cc-row.cc-header { color: var(--text-muted); font-size: 13px; font-weight: 600; }
+    .cc-row .cc-cell { font-size: 14px; }
+    .cc-row .cc-cell:first-child { font-weight: 600; }
+
+    /* ===== FAQ ===== */
+    .faq-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+
+    .faq-item {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px 24px;
+    }
+
+    .faq-item .faq-q {
+      font-size: 15px; font-weight: 700; margin-bottom: 6px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .faq-item .faq-a { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* ===== Footer ===== */
+    .footer {
+      text-align: center; padding: 36px 0;
+      color: var(--text-muted); font-size: 13px;
+      border-top: 1px solid var(--border); margin-top: 40px;
+    }
+
+    /* ===== Competitor Cards ===== */
+    .competitor-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+    }
+
+    .comp-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 28px; position: relative; overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .comp-card:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+
+    .comp-card::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 100%; height: 4px;
+    }
+
+    .comp-card.nba::before { background: linear-gradient(90deg, #ED1C24, #FF6B35); }
+    .comp-card.magic::before { background: linear-gradient(90deg, #E42575, #9B30FF); }
+    .comp-card.opensea::before { background: linear-gradient(90deg, #2081E2, #3BACF7); }
+    .comp-card.piece::before { background: linear-gradient(90deg, var(--primary), var(--accent)); }
+
+    .comp-card.piece { border: 2px solid var(--primary); box-shadow: 0 8px 40px var(--glow-blue); }
+
+    .comp-header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+
+    .comp-logo {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; flex-shrink: 0;
+    }
+
+    .comp-card.nba .comp-logo { background: rgba(237, 28, 36, 0.12); }
+    .comp-card.magic .comp-logo { background: rgba(228, 37, 117, 0.12); }
+    .comp-card.opensea .comp-logo { background: rgba(32, 129, 226, 0.12); }
+    .comp-card.piece .comp-logo { background: rgba(37, 99, 235, 0.12); }
+
+    .comp-header .comp-info h3 { font-size: 18px; font-weight: 800; margin-bottom: 2px; }
+    .comp-header .comp-info .comp-sub { font-size: 12px; color: var(--text-muted); }
+
+    .comp-badge {
+      position: absolute; top: 16px; right: 16px;
+      padding: 4px 12px; border-radius: 50px;
+      font-size: 11px; font-weight: 700;
+    }
+
+    .comp-badge.ours {
+      background: linear-gradient(135deg, var(--primary), var(--purple));
+      color: white;
+    }
+
+    .comp-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+
+    .comp-tag {
+      padding: 4px 10px; border-radius: 6px;
+      font-size: 11px; font-weight: 600;
+      background: rgba(255,255,255,0.06); color: var(--text-secondary);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .comp-tag.good { background: rgba(16, 185, 129, 0.1); color: var(--accent-light); border-color: rgba(16, 185, 129, 0.2); }
+    .comp-tag.warn { background: rgba(245, 158, 11, 0.1); color: #FBBF24; border-color: rgba(245, 158, 11, 0.2); }
+    .comp-tag.bad { background: rgba(239, 68, 68, 0.1); color: #F87171; border-color: rgba(239, 68, 68, 0.2); }
+
+    .comp-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px; }
+
+    .comp-specs { display: flex; flex-direction: column; gap: 0; }
+
+    .comp-spec {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 13px;
+    }
+
+    .comp-spec:last-child { border-bottom: none; }
+    .comp-spec .spec-label { color: var(--text-muted); }
+    .comp-spec .spec-value { font-weight: 600; text-align: right; }
+    .comp-spec .spec-value.yes { color: var(--accent-light); }
+    .comp-spec .spec-value.no { color: #F87171; }
+    .comp-spec .spec-value.partial { color: #FBBF24; }
+
+    /* ===== Problems Section ===== */
+    .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .problem-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px; position: relative; overflow: hidden;
+    }
+
+    .problem-card::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--danger), #F97316);
+    }
+
+    .problem-card .problem-icon { font-size: 28px; margin-bottom: 12px; }
+    .problem-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: #F87171; }
+    .problem-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* Solution card */
+    .solution-card {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(16, 185, 129, 0.06));
+      border: 1px solid rgba(37, 99, 235, 0.2);
+      border-radius: 16px; padding: 24px; position: relative; overflow: hidden;
+    }
+
+    .solution-card::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    .solution-card .problem-icon { font-size: 28px; margin-bottom: 12px; }
+    .solution-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--accent-light); }
+    .solution-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* ===== Big Comparison Table ===== */
+    .big-table-wrap {
+      overflow-x: auto; border-radius: 16px; border: 1px solid var(--border);
+      margin-top: 24px;
+    }
+
+    .big-table {
+      width: 100%; border-collapse: separate; border-spacing: 0; min-width: 700px;
+    }
+
+    .big-table thead th {
+      background: var(--bg-card); padding: 16px 14px;
+      text-align: center; font-size: 13px; font-weight: 700;
+      color: var(--text-secondary); border-bottom: 2px solid var(--border);
+      position: sticky; top: 0;
+    }
+
+    .big-table thead th:first-child { text-align: left; }
+    .big-table thead th.ours-col { background: rgba(37, 99, 235, 0.12); color: var(--primary-light); }
+
+    .big-table tbody td {
+      padding: 14px; font-size: 13px; text-align: center;
+      border-bottom: 1px solid var(--border); background: var(--bg);
+    }
+
+    .big-table tbody td:first-child { text-align: left; font-weight: 600; color: var(--text); }
+    .big-table tbody td.ours-col { background: rgba(37, 99, 235, 0.04); }
+    .big-table tbody tr:hover td { background: var(--bg-card); }
+    .big-table tbody tr:hover td.ours-col { background: rgba(37, 99, 235, 0.08); }
+
+    .tbl-yes { color: var(--accent-light); font-weight: 700; }
+    .tbl-no { color: #F87171; }
+    .tbl-partial { color: #FBBF24; }
+    .tbl-highlight { color: var(--primary-light); font-weight: 700; }
+
+    /* ===== Positioning ===== */
+    .position-visual {
+      margin-top: 32px; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 32px; position: relative;
+    }
+
+    .position-chart {
+      position: relative; height: 340px; margin: 20px 0;
+    }
+
+    .axis-label {
+      position: absolute; font-size: 11px; color: var(--text-muted);
+      font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+    }
+
+    .axis-label.x-label { bottom: -4px; left: 50%; transform: translateX(-50%); }
+    .axis-label.y-label { top: 50%; left: -4px; transform: rotate(-90deg) translateX(-50%); transform-origin: left center; }
+
+    .axis-line {
+      position: absolute; background: var(--border);
+    }
+
+    .axis-line.x { bottom: 20px; left: 40px; right: 20px; height: 1px; }
+    .axis-line.y { bottom: 20px; left: 40px; width: 1px; top: 10px; }
+
+    .plot-dot {
+      position: absolute; width: 60px; height: 60px;
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 22px; cursor: default;
+      transition: transform 0.2s ease;
+    }
+
+    .plot-dot:hover { transform: scale(1.15); }
+
+    .plot-dot .dot-label {
+      position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%); margin-top: 6px;
+      font-size: 11px; font-weight: 700; white-space: nowrap;
+      color: var(--text-secondary);
+    }
+
+    .plot-dot.nba-dot { background: rgba(237, 28, 36, 0.2); border: 2px solid rgba(237, 28, 36, 0.4); }
+    .plot-dot.magic-dot { background: rgba(228, 37, 117, 0.2); border: 2px solid rgba(228, 37, 117, 0.4); }
+    .plot-dot.opensea-dot { background: rgba(32, 129, 226, 0.2); border: 2px solid rgba(32, 129, 226, 0.4); }
+    .plot-dot.piece-dot {
+      background: rgba(37, 99, 235, 0.25); border: 2px solid var(--primary);
+      box-shadow: 0 0 20px var(--glow-blue); width: 70px; height: 70px; font-size: 24px;
+    }
+
+    /* ===== Glossary ===== */
+    .glossary-search {
+      width: 100%; padding: 14px 20px; border-radius: 12px;
+      border: 1px solid var(--border); background: var(--bg-card);
+      color: var(--text); font-size: 15px; font-family: inherit;
+      margin-bottom: 24px; outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .glossary-search:focus { border-color: var(--primary); }
+    .glossary-search::placeholder { color: var(--text-muted); }
+
+    .glossary-category { margin-bottom: 32px; }
+    .glossary-category-title {
+      font-size: 16px; font-weight: 700; margin-bottom: 12px;
+      padding-bottom: 8px; border-bottom: 2px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .glossary-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .glossary-item {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px 22px; cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .glossary-item:hover { border-color: var(--primary); transform: translateX(4px); }
+    .glossary-item.open { border-color: var(--primary); }
+
+    .glossary-term {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .glossary-term h4 { font-size: 15px; font-weight: 700; }
+    .glossary-term .eng { font-size: 12px; color: var(--text-muted); font-weight: 400; margin-left: 8px; }
+    .glossary-term .arrow { color: var(--text-muted); font-size: 14px; transition: transform 0.2s; }
+    .glossary-item.open .glossary-term .arrow { transform: rotate(180deg); }
+
+    .glossary-detail {
+      display: none; margin-top: 12px; padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .glossary-item.open .glossary-detail { display: block; }
+
+    .glossary-detail .gd-simple {
+      font-size: 15px; font-weight: 600; color: var(--accent-light);
+      margin-bottom: 8px; line-height: 1.5;
+    }
+    .glossary-detail .gd-desc {
+      font-size: 13px; color: var(--text-secondary); line-height: 1.7;
+    }
+    .glossary-detail .gd-example {
+      margin-top: 10px; padding: 10px 14px; border-radius: 8px;
+      background: rgba(37, 99, 235, 0.06); border: 1px solid rgba(37, 99, 235, 0.15);
+      font-size: 12px; color: var(--text-secondary); line-height: 1.6;
+    }
+    .glossary-detail .gd-example strong { color: var(--primary-light); }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .header h1 { font-size: 26px; }
+      .tab-btn { font-size: 12px; padding: 10px 8px; min-width: 80px; }
+      .tab-btn .tab-icon { font-size: 14px; }
+      .flow-row { grid-template-columns: 1fr; gap: 8px; }
+      .flow-arrow { transform: rotate(90deg); padding: 4px 0; }
+      .flow-arrow span { transform: rotate(-90deg); }
+      .fee-grid { grid-template-columns: 1fr 1fr; }
+      .revenue-grid { grid-template-columns: 1fr; gap: 12px; }
+      .compare-grid { grid-template-columns: 1fr; }
+      .monthly-grid { grid-template-columns: 1fr 1fr; }
+      .charge-grid { grid-template-columns: 1fr; }
+      .section h2 { font-size: 22px; }
+      .cc-row { grid-template-columns: 1fr 1fr; gap: 6px; }
+      .competitor-grid { grid-template-columns: 1fr; }
+      .problem-grid { grid-template-columns: 1fr; }
+      .position-chart { height: 280px; }
+      .plot-dot { width: 46px; height: 46px; font-size: 18px; }
+      .plot-dot.piece-dot { width: 54px; height: 54px; font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">
+        <div class="logo-icon">P</div>
+        <span class="logo-text">PieceMarket</span>
+      </div>
+      <h1>Business Model &<br>Cost Structure</h1>
+      <p class="subtitle">비용 구조 &middot; 수익 모델 &middot; 거래 흐름 분석서</p>
+      <span class="badge badge-blue">Base L2 Chain &middot; USDC &middot; ERC-1155</span>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="showTab('fees')">
+        <span class="tab-icon">💰</span> 수수료 & 수익
+      </button>
+      <button class="tab-btn" onclick="showTab('flow')">
+        <span class="tab-icon">🔄</span> 돈의 흐름
+      </button>
+      <button class="tab-btn" onclick="showTab('process')">
+        <span class="tab-icon">📋</span> 거래 절차
+      </button>
+      <button class="tab-btn" onclick="showTab('charge')">
+        <span class="tab-icon">👛</span> 충전 방식
+      </button>
+      <button class="tab-btn" onclick="showTab('infra')">
+        <span class="tab-icon">⚙️</span> 운영 비용
+      </button>
+      <button class="tab-btn" onclick="showTab('compete')">
+        <span class="tab-icon">⚔️</span> 경쟁사 비교
+      </button>
+      <button class="tab-btn" onclick="showTab('glossary')">
+        <span class="tab-icon">📖</span> 용어집
+      </button>
+    </div>
+
+    <!-- ==================== TAB 1: 수수료 & 수익 ==================== -->
+    <div id="tab-fees" class="tab-content active">
+      <div class="section">
+        <div class="section-label">Revenue Model</div>
+        <h2>사용자별 수수료 구조</h2>
+        <p class="desc">모든 거래에서 본사가 수수료 수익을 확보합니다</p>
+
+        <div class="fee-grid">
+          <div class="fee-card buy">
+            <div class="fee-label">구매 수수료</div>
+            <div class="fee-rate">3%</div>
+            <div class="fee-desc">투자자가 조각을 구매할 때</div>
+            <div class="fee-example">예: 100 USDC 구매 시 <strong>3 USDC</strong> 수수료</div>
+          </div>
+          <div class="fee-card sell">
+            <div class="fee-label">판매 수수료</div>
+            <div class="fee-rate">2%</div>
+            <div class="fee-desc">보유 조각을 매각할 때</div>
+            <div class="fee-example">예: 100 USDC 매각 시 <strong>2 USDC</strong> 수수료</div>
+          </div>
+          <div class="fee-card listing">
+            <div class="fee-label">등록 수수료</div>
+            <div class="fee-rate">5%</div>
+            <div class="fee-desc">셀러가 새 자산을 등록할 때</div>
+            <div class="fee-example">예: $50,000 자산 등록 시 <strong>2,500 USDC</strong></div>
+          </div>
+          <div class="fee-card swap">
+            <div class="fee-label">교환 수수료</div>
+            <div class="fee-rate">1.5%</div>
+            <div class="fee-desc">양쪽 각각 (총 3%)</div>
+            <div class="fee-example">판매+재구매(5%) 대비 <strong>40% 절약</strong></div>
+          </div>
+          <div class="fee-card gas">
+            <div class="fee-label">가스비 (네트워크)</div>
+            <div class="fee-rate">~$0.01</div>
+            <div class="fee-desc">Base L2 체인 이용료 (건당)</div>
+            <div class="fee-example">실제 원가 ~$0.001, <strong>차익 ~$0.009</strong></div>
+          </div>
+        </div>
+
+        <div class="revenue-box">
+          <h3>💰 월 수익 시뮬레이션 (사용자 1,000명 기준)</h3>
+          <div class="revenue-grid">
+            <div class="revenue-item">
+              <div class="label">월 거래액 $500,000 가정</div>
+              <div class="value">$15,000</div>
+              <div class="sub">구매 수수료 3%</div>
+            </div>
+            <div class="revenue-item">
+              <div class="label">월 매각액 $200,000 가정</div>
+              <div class="value">$4,000</div>
+              <div class="sub">판매 수수료 2%</div>
+            </div>
+            <div class="revenue-item">
+              <div class="label">신규 등록 10건 가정</div>
+              <div class="value">$25,000</div>
+              <div class="sub">평균 $50,000 x 5%</div>
+            </div>
+          </div>
+          <div class="total-row">
+            <div>
+              <div class="total-label">예상 월 총 수익</div>
+              <div class="total-note">교환 수수료 + 가스비 차익 별도</div>
+            </div>
+            <div class="total-value">~$44,000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 2: 돈의 흐름 ==================== -->
+    <div id="tab-flow" class="tab-content">
+      <div class="section">
+        <div class="section-label">Money Flow</div>
+        <h2>돈의 흐름</h2>
+        <p class="desc">구매자의 신용카드 결제부터 판매자의 은행 입금까지</p>
+
+        <div class="flow-section-title" style="color:var(--primary-light);">
+          <span class="dot" style="background:var(--primary-light);"></span> 구매자 (투자자)
+        </div>
+        <div class="flow-row">
+          <div class="flow-card">
+            <div class="icon blue">💳</div>
+            <h3>신용카드 결제</h3>
+            <p>원화로 결제하면 자동으로 USDC로 환전됩니다</p>
+            <div class="amount">50,000원 결제</div>
+          </div>
+          <div class="flow-arrow"><span>&rarr;</span></div>
+          <div class="flow-card">
+            <div class="icon green">👛</div>
+            <h3>앱 지갑 충전</h3>
+            <p>앱 가입 시 AA 지갑이 자동 생성, USDC 잔액 표시</p>
+            <div class="amount">~36 USDC 충전됨</div>
+          </div>
+          <div class="flow-arrow"><span>&rarr;</span></div>
+          <div class="flow-card">
+            <div class="icon purple">🧩</div>
+            <h3>조각 구매</h3>
+            <p>마켓에서 원하는 자산의 조각을 수량 선택하여 구매</p>
+            <div class="amount cost">30 USDC + 수수료 0.9</div>
+          </div>
+        </div>
+
+        <div class="flow-section-title" style="color:var(--accent-light); margin-top:28px;">
+          <span class="dot" style="background:var(--accent-light);"></span> 판매자 (셀러)
+        </div>
+        <div class="flow-row">
+          <div class="flow-card">
+            <div class="icon pink">📦</div>
+            <h3>자산 등록</h3>
+            <p>사진 + 정보 입력 &rarr; 가격 & 조각 수 설정 &rarr; 등록비 납부</p>
+            <div class="amount cost">등록비 5% 납부</div>
+          </div>
+          <div class="flow-arrow"><span>&rarr;</span></div>
+          <div class="flow-card">
+            <div class="icon yellow">🔍</div>
+            <h3>검수 & 수탁</h3>
+            <p>실물 수령 &rarr; 감정/검수 &rarr; 제3자 수탁기관 보관 &rarr; 인증서 발급</p>
+            <div class="amount">인증서 자동 생성</div>
+          </div>
+          <div class="flow-arrow"><span>&rarr;</span></div>
+          <div class="flow-card">
+            <div class="icon green">💰</div>
+            <h3>수익 수령</h3>
+            <p>조각이 팔릴 때마다 지갑에 USDC 입금 &rarr; 원화 출금 가능</p>
+            <div class="amount">USDC &rarr; 원화 &rarr; 은행계좌</div>
+          </div>
+        </div>
+
+        <div class="flow-section-title" style="color:#A78BFA; margin-top:28px;">
+          <span class="dot" style="background:#A78BFA;"></span> 본사 (플랫폼)
+        </div>
+        <div class="flow-row">
+          <div class="flow-card">
+            <div class="icon blue">📊</div>
+            <h3>수수료 수집</h3>
+            <p>모든 거래에서 자동으로 수수료가 본사 지갑에 적립</p>
+            <div class="amount">구매 3% + 판매 2% + 등록 5%</div>
+          </div>
+          <div class="flow-arrow"><span>&rarr;</span></div>
+          <div class="flow-card">
+            <div class="icon green">🏦</div>
+            <h3>관리자 대시보드</h3>
+            <p>실시간 수익 확인, 거래 내역 조회, 수익 분석</p>
+            <div class="amount">실시간 수익 모니터링</div>
+          </div>
+          <div class="flow-arrow"><span>&rarr;</span></div>
+          <div class="flow-card">
+            <div class="icon purple">🏧</div>
+            <h3>수익 인출</h3>
+            <p>관리자가 원할 때 외부 지갑으로 수익금 송금</p>
+            <div class="amount">USDC &rarr; 법인 계좌</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 3: 거래 절차 ==================== -->
+    <div id="tab-process" class="tab-content">
+      <div class="section">
+        <div class="section-label">Transaction Process</div>
+        <h2>거래 절차 (단계별)</h2>
+        <p class="desc">구매자와 판매자 각각의 단계별 프로세스</p>
+
+        <!-- 구매자 -->
+        <div class="flow-section-title" style="color:var(--primary-light); margin-bottom:20px; font-size:18px;">
+          <span class="dot" style="background:var(--primary-light);"></span> 구매자 프로세스
+        </div>
+
+        <div class="steps-container">
+          <div class="step-row">
+            <div class="step-line">
+              <div class="step-num blue">1</div>
+              <div class="step-connector"></div>
+            </div>
+            <div class="step-body">
+              <h4>회원가입 & 지갑 자동 생성</h4>
+              <p>소셜 로그인(Google/Apple)만 하면 앱 내 전용 지갑이 자동 생성</p>
+              <div class="step-detail">
+                블록체인 지식 필요 없음 &middot; 별도 비밀번호 없음 &middot; <strong>30초 안에 완료</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <div class="step-line">
+              <div class="step-num blue">2</div>
+              <div class="step-connector"></div>
+            </div>
+            <div class="step-body">
+              <h4>지갑에 USDC 충전</h4>
+              <p>신용카드 결제 또는 외부 지갑에서 직접 전송</p>
+              <div class="step-detail">
+                신용카드 50,000원 결제 &rarr; 자동 환전 &rarr; <strong>~36 USDC 충전</strong><br>
+                USDC = 1달러와 항상 1:1인 디지털 달러 (가격 변동 없음)
+              </div>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <div class="step-line">
+              <div class="step-num blue">3</div>
+              <div class="step-connector"></div>
+            </div>
+            <div class="step-body">
+              <h4>마음에 드는 자산의 조각 구매</h4>
+              <p>마켓에서 자산 선택 &rarr; 수량 선택 &rarr; 수수료 확인 &rarr; 구매 확정</p>
+              <div class="step-detail">
+                "리자몽 1판" 총 $50,000 &rarr; 1,000조각 &rarr; <strong>1조각당 50 USDC</strong><br>
+                5조각 구매: 250 USDC + 수수료 7.5 USDC(3%) = <strong>257.5 USDC</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <div class="step-line">
+              <div class="step-num blue">4</div>
+              <div class="step-connector"></div>
+            </div>
+            <div class="step-body">
+              <h4>보유 조각 활용</h4>
+              <p>보유 / 교환 / 판매 중 선택</p>
+              <div class="step-detail">
+                <strong>보유:</strong> 가치 상승 기대하며 홀딩<br>
+                <strong>교환:</strong> 리자몽 5조각 &harr; BTS 앨범 3조각 (수수료 40% 절약)<br>
+                <strong>판매:</strong> 마켓에서 되팔기
+              </div>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <div class="step-line">
+              <div class="step-num green">5</div>
+            </div>
+            <div class="step-body">
+              <h4>출금 (현금화)</h4>
+              <p>조각 판매 &rarr; USDC &rarr; 원화 환전 &rarr; 은행 입금</p>
+              <div class="step-detail">
+                USDC &rarr; 원화 자동 환전 &rarr; <strong>내 은행 계좌 입금</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 판매자 -->
+        <div class="flow-section-title" style="color:var(--accent-light); margin:40px 0 20px; font-size:18px;">
+          <span class="dot" style="background:var(--accent-light);"></span> 판매자 프로세스
+        </div>
+
+        <div class="steps-container">
+          <div class="step-row">
+            <div class="step-line">
+              <div class="step-num green">1</div>
+              <div class="step-connector"></div>
+            </div>
+            <div class="step-body">
+              <h4>회원가입 & 셀러 등록</h4>
+              <p>같은 앱에서 "셀러 등록" 신청</p>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <div class="step-line">
+              <div class="step-num green">2</div>
+              <div class="step-connector"></div>
+            </div>
+            <div class="step-body">
+              <h4>자산 등록 (4단계)</h4>
+              <p>사진 &rarr; 정보 입력 &rarr; 가격 & 조각 설정 &rarr; 검토 제출</p>
+              <div class="step-detail">
+                총 가치 $50,000 설정 시 조각 선택:<br>
+                &bull; <strong>1조각</strong> = $50,000 (통째로 판매)<br>
+                &bull; <strong>100조각</strong> = 1조각당 $500<br>
+                &bull; <strong>1,000조각</strong> = 1조각당 $50 (소액 투자 가능)<br><br>
+                등록 수수료: 총 가치의 <strong>5%</strong> 납부
+              </div>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <div class="step-line">
+              <div class="step-num green">3</div>
+              <div class="step-connector"></div>
+            </div>
+            <div class="step-body">
+              <h4>실물 검수 & 수탁</h4>
+              <p>본사가 실물 수령 &rarr; 감정/검수 &rarr; 제3자 수탁기관에 보관</p>
+              <div class="step-detail">
+                인증서 자동 발급: <strong>수탁증명 + 법적권리 + 온체인 증명</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <div class="step-line">
+              <div class="step-num green">4</div>
+              <div class="step-connector"></div>
+            </div>
+            <div class="step-body">
+              <h4>마켓에 게시 & 판매</h4>
+              <p>앱 마켓플레이스에 자동 노출, 조각이 팔릴 때마다 수익 발생</p>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <div class="step-line">
+              <div class="step-num green">5</div>
+            </div>
+            <div class="step-body">
+              <h4>수익 출금</h4>
+              <p>지갑의 USDC &rarr; 원화 환전 &rarr; 은행 계좌 입금</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 4: 충전 방식 ==================== -->
+    <div id="tab-charge" class="tab-content">
+      <div class="section">
+        <div class="section-label">Deposit Methods</div>
+        <h2>지갑 충전 방식</h2>
+        <p class="desc">일반인과 코인 보유자 모두를 위한 2가지 충전 경로</p>
+
+        <div class="charge-grid">
+          <!-- Card -->
+          <div class="charge-card card-type">
+            <div class="charge-icon">💳</div>
+            <h3>신용카드 충전</h3>
+            <div class="charge-sub">코인을 몰라도 OK &mdash; 일반인 대상</div>
+
+            <div class="charge-step">
+              <div class="cs-num">1</div>
+              <div class="cs-text">앱에서 <strong>"충전"</strong> 버튼 클릭</div>
+            </div>
+            <div class="charge-step">
+              <div class="cs-num">2</div>
+              <div class="cs-text">신용카드 정보 입력 &rarr; <strong>원화로 결제</strong></div>
+            </div>
+            <div class="charge-step">
+              <div class="cs-num">3</div>
+              <div class="cs-text">Coinbase Onramp API가 <strong>원화 &rarr; USDC 자동 환전</strong></div>
+            </div>
+            <div class="charge-step">
+              <div class="cs-num">4</div>
+              <div class="cs-text">앱 지갑에 <strong>USDC 잔액 즉시 반영</strong></div>
+            </div>
+
+            <span class="charge-tag easy">거래소 가입 불필요 &middot; 수수료 ~1.5%</span>
+          </div>
+
+          <!-- Crypto -->
+          <div class="charge-card crypto-type">
+            <div class="charge-icon">🔗</div>
+            <h3>외부 지갑 / 거래소 전송</h3>
+            <div class="charge-sub">이미 USDC를 보유한 사용자 대상</div>
+
+            <div class="charge-step">
+              <div class="cs-num">1</div>
+              <div class="cs-text">앱에서 <strong>내 지갑 주소(0x...)</strong> 또는 QR코드 확인</div>
+            </div>
+            <div class="charge-step">
+              <div class="cs-num">2</div>
+              <div class="cs-text">거래소(업비트, 코인베이스 등) 또는 개인 지갑(메타마스크 등)에서</div>
+            </div>
+            <div class="charge-step">
+              <div class="cs-num">3</div>
+              <div class="cs-text"><strong>Base 체인 네트워크</strong> 선택 후 USDC 전송</div>
+            </div>
+            <div class="charge-step">
+              <div class="cs-num">4</div>
+              <div class="cs-text">앱 지갑에 <strong>자동 반영</strong> (별도 API 불필요)</div>
+            </div>
+
+            <span class="charge-tag pro">가스비만 ~$0.01 &middot; 추가 수수료 없음</span>
+          </div>
+        </div>
+
+        <!-- Comparison -->
+        <div class="charge-compare">
+          <h3>📊 충전 방식 비교</h3>
+          <div class="cc-row cc-header">
+            <div class="cc-cell">항목</div>
+            <div class="cc-cell">신용카드 충전</div>
+            <div class="cc-cell">외부 전송</div>
+            <div class="cc-cell">QR 전송</div>
+          </div>
+          <div class="cc-row">
+            <div class="cc-cell">대상</div>
+            <div class="cc-cell">일반인</div>
+            <div class="cc-cell">코인 보유자</div>
+            <div class="cc-cell">둘 다</div>
+          </div>
+          <div class="cc-row">
+            <div class="cc-cell">필요 조건</div>
+            <div class="cc-cell">신용카드</div>
+            <div class="cc-cell">USDC 보유</div>
+            <div class="cc-cell">USDC 보유</div>
+          </div>
+          <div class="cc-row">
+            <div class="cc-cell">수수료</div>
+            <div class="cc-cell" style="color:#FBBF24;">~1.5%</div>
+            <div class="cc-cell" style="color:var(--accent-light);">가스비만 ~$0.01</div>
+            <div class="cc-cell" style="color:var(--accent-light);">가스비만 ~$0.01</div>
+          </div>
+          <div class="cc-row">
+            <div class="cc-cell">API 필요</div>
+            <div class="cc-cell">Coinbase Onramp</div>
+            <div class="cc-cell" style="color:var(--accent-light);">불필요</div>
+            <div class="cc-cell" style="color:var(--accent-light);">불필요</div>
+          </div>
+          <div class="cc-row">
+            <div class="cc-cell">거래소 가입</div>
+            <div class="cc-cell" style="color:var(--accent-light);">불필요</div>
+            <div class="cc-cell">필요</div>
+            <div class="cc-cell">필요</div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <h3 style="margin-top:32px; margin-bottom:4px; font-size:18px;">자주 묻는 질문</h3>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <div class="faq-q">Q. 지갑을 따로 준비해야 하나요?</div>
+            <div class="faq-a"><strong>아니요.</strong> 앱 가입하면 AA(계정 추상화) 지갑이 자동 생성됩니다. 별도 설치나 시드 구문 보관이 필요 없습니다.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Q. USDC가 뭔가요?</div>
+            <div class="faq-a"><strong>1 USDC = 1달러.</strong> Circle이 발행하는 스테이블코인으로, 비트코인처럼 가격 변동이 없는 디지털 달러입니다.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Q. 왜 원화 대신 USDC를 쓰나요?</div>
+            <div class="faq-a"><strong>글로벌 거래 + 블록체인 기록.</strong> 해외 사용자도 동일한 가격으로 거래 가능하고, 모든 거래가 블록체인에 투명하게 기록됩니다.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Q. 가스비가 뭔가요?</div>
+            <div class="faq-a"><strong>블록체인 이용료.</strong> Base 체인이라 건당 ~15원으로 거의 무시할 수 있는 수준입니다. Coinbase가 대납해주면 0원입니다.</div>
+          </div>
+        </div>
+
+        <div class="highlight-box" style="margin-top:24px;">
+          <div class="hl-icon">💡</div>
+          <div class="hl-text">
+            <h4>핵심 전략</h4>
+            <p>
+              <strong>카드 충전은 일반인용, 직접 전송은 코인 보유자용.</strong>
+              두 방식을 모두 지원하면 코인 초보자부터 숙련자까지 모든 고객층을 커버할 수 있습니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 5: 운영 비용 ==================== -->
+    <div id="tab-infra" class="tab-content">
+      <div class="section">
+        <div class="section-label">Infrastructure</div>
+        <h2>실제 운영 비용</h2>
+        <p class="desc">Base 체인 + Coinbase 에코시스템을 활용한 비용 최소화 전략</p>
+
+        <div class="compare-grid">
+          <div class="compare-card recommend">
+            <div class="rec-badge">RECOMMENDED</div>
+            <h4>Base + Coinbase 올인</h4>
+            <div class="sub">현재 프로젝트 전략</div>
+            <div class="compare-item"><span class="label">지갑 SDK</span><span class="val free">$0 (무료)</span></div>
+            <div class="compare-item"><span class="label">가스비 대납</span><span class="val free">$0 (무료)</span></div>
+            <div class="compare-item"><span class="label">환전 수수료</span><span class="val cost">~1.5%</span></div>
+            <div class="compare-item"><span class="label">서버 (Vercel)</span><span class="val free">$0 (무료)</span></div>
+            <div class="compare-item"><span class="label">DB (초기)</span><span class="val free">$0 (무료 티어)</span></div>
+          </div>
+          <div class="compare-card other">
+            <h4>일반 구성 (참고)</h4>
+            <div class="sub">Ethereum L1 + 독립 인프라</div>
+            <div class="compare-item"><span class="label">지갑 SDK</span><span class="val cost">$0.10/유저/월</span></div>
+            <div class="compare-item"><span class="label">가스비</span><span class="val cost">$2~50/건</span></div>
+            <div class="compare-item"><span class="label">환전 수수료</span><span class="val cost">3.5~4.5%</span></div>
+            <div class="compare-item"><span class="label">서버 (AWS)</span><span class="val cost">$50~200/월</span></div>
+            <div class="compare-item"><span class="label">DB (RDS)</span><span class="val cost">$30~100/월</span></div>
+          </div>
+        </div>
+
+        <h3 style="margin-top:36px; margin-bottom:14px; font-size:17px;">지갑 SDK 비교</h3>
+        <table class="cost-table">
+          <thead><tr><th>서비스</th><th>무료 범위</th><th>유료 전환 시</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr><td class="provider">Coinbase Smart Wallet</td><td><span class="free-tag">무제한 무료</span></td><td>-</td><td>Base 전용, 우리 프로젝트 최적</td></tr>
+            <tr><td class="provider">Privy</td><td>1,000 MAU</td><td><span class="paid-tag">$0.10/유저/월</span></td><td>소셜 로그인 포함</td></tr>
+            <tr><td class="provider">Particle Network</td><td>2,000 MAU</td><td><span class="paid-tag">$0.04/유저/월</span></td><td>동남아 지원 강점</td></tr>
+            <tr><td class="provider">Thirdweb</td><td>1,000 지갑</td><td><span class="paid-tag">요금제별</span></td><td>올인원 SDK</td></tr>
+          </tbody>
+        </table>
+
+        <h3 style="margin-top:28px; margin-bottom:14px; font-size:17px;">가스비 대납 (Paymaster) 비교</h3>
+        <table class="cost-table">
+          <thead><tr><th>서비스</th><th>무료 범위</th><th>유료 전환 시</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr><td class="provider">Coinbase Paymaster</td><td><span class="free-tag">Base 체인 무료</span></td><td>-</td><td>Base 생태계 활성화 보조금</td></tr>
+            <tr><td class="provider">Pimlico</td><td>소량 무료</td><td><span class="paid-tag">$0.01~0.05/건</span></td><td>멀티체인 지원</td></tr>
+            <tr><td class="provider">Alchemy Gas Manager</td><td>월 한도 있음</td><td><span class="paid-tag">초과분 유료</span></td><td>Alchemy 생태계</td></tr>
+          </tbody>
+        </table>
+
+        <div class="monthly-box">
+          <h3 style="font-size:19px; font-weight:800;">월 운영비 요약 (사용자 1,000명 기준)</h3>
+          <div class="monthly-grid">
+            <div class="monthly-item">
+              <div class="emoji">👛</div>
+              <div class="label">지갑 SDK</div>
+              <div class="price free">$0</div>
+              <div class="note">Coinbase Smart Wallet</div>
+            </div>
+            <div class="monthly-item">
+              <div class="emoji">⛽</div>
+              <div class="label">가스비 대납</div>
+              <div class="price free">$0</div>
+              <div class="note">Coinbase Paymaster</div>
+            </div>
+            <div class="monthly-item">
+              <div class="emoji">🌐</div>
+              <div class="label">서버 호스팅</div>
+              <div class="price free">$0</div>
+              <div class="note">Vercel 무료 플랜</div>
+            </div>
+            <div class="monthly-item">
+              <div class="emoji">🗄️</div>
+              <div class="label">DB (향후)</div>
+              <div class="price low">~$20</div>
+              <div class="note">Supabase / PlanetScale</div>
+            </div>
+          </div>
+          <div class="total-row">
+            <div>
+              <div class="total-label">월 총 인프라 비용</div>
+              <div class="total-note">환전 수수료(~1.5%)는 고객 부담이므로 제외</div>
+            </div>
+            <div class="total-value">~$20/월</div>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          <div class="hl-icon">💡</div>
+          <div class="hl-text">
+            <h4>왜 Base 체인인가?</h4>
+            <p>Coinbase가 Base 체인 생태계를 키우기 위해 <strong>지갑 생성 무료 + 가스비 스폰서</strong>를 제공 중입니다.
+            이 보조금 정책이 유지되는 동안 인프라 비용이 거의 $0입니다.
+            Ethereum L1 대비 가스비가 1/1000 수준이며, 보안은 Ethereum과 동일합니다.</p>
+          </div>
+        </div>
+
+        <div class="highlight-box" style="border-color: rgba(16, 185, 129, 0.2); background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(16, 185, 129, 0.02));">
+          <div class="hl-icon">🔐</div>
+          <div class="hl-text">
+            <h4>AA 지갑의 핵심 가치</h4>
+            <p>사용자의 조각 NFT는 블록체인 위에 존재합니다. 설사 PieceMarket이 서비스를 종료하더라도
+            <strong>사용자는 자신의 지갑으로 자산을 독립적으로 관리</strong>할 수 있습니다.
+            이것이 중앙화 거래소와의 근본적 차이입니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 6: 경쟁사 비교 ==================== -->
+    <div id="tab-compete" class="tab-content">
+
+      <!-- Section 1: 기존 NFT 시장의 문제점 -->
+      <div class="section">
+        <div class="section-label">Market Problems</div>
+        <h2>기존 NFT 시장의 문제점</h2>
+        <p class="desc">이미지 기반 NFT 거래 시장이 가진 근본적 한계와 PieceMarket의 해결책</p>
+
+        <div class="problem-grid">
+          <div class="problem-card">
+            <div class="problem-icon">🖼️</div>
+            <h4>실체 없는 디지털 자산</h4>
+            <p>대부분의 NFT는 JPEG 이미지에 불과합니다. 라이선스라고 주장하지만, <strong>법적 소유권이 없고</strong> 우클릭 저장으로 복제 가능합니다. "내가 산 원숭이 그림이 왜 가치가 있지?"라는 질문에 답할 수 없습니다.</p>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon">📉</div>
+            <h4>가격 거품 붕괴</h4>
+            <p>2021~22년 NFT 시장은 투기 열풍이었습니다. <strong>OpenSea 거래량이 97% 하락</strong>(2022→2024), BAYC 바닥가는 $400K → $30K로 폭락했습니다. 실물 가치 없이 "커뮤니티"만으로는 지속 불가합니다.</p>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon">🔒</div>
+            <h4>높은 진입장벽</h4>
+            <p>전용 지갑 앱 설치, 복구 비밀번호 백업, 암호화폐 구매, 네트워크 수수료 이해... <strong>일반인이 NFT를 사려면 최소 5단계</strong>를 거쳐야 합니다. 아버지가 쓸 수 있는 서비스인가요?</p>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon">💸</div>
+            <h4>비싼 가스비 & 느린 속도</h4>
+            <p>이더리움 기본 네트워크에서 NFT를 만들면 네트워크 수수료가 <strong>$20~200</strong>까지 치솟습니다. 혼잡할 때는 처리에 수십 분 걸리고, 실패해도 수수료는 환불되지 않습니다.</p>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon">🎰</div>
+            <h4>투기성 & 세탁 거래</h4>
+            <p>같은 사람이 자기 지갑끼리 주고받으며 가격을 인위적으로 올리는 <strong>"자전거래(세탁 거래)"</strong>가 만연합니다. 실제 수요 없이 부풀린 시세가 NFT 시장의 신뢰를 무너뜨렸습니다.</p>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon">⚖️</div>
+            <h4>법적 보호 부재</h4>
+            <p>NFT를 샀는데 운영자가 돈만 갖고 도망가면(일명 "먹튀")? <strong>아무런 법적 구제 수단이 없습니다.</strong> 대부분의 NFT 프로젝트는 약관, 소유권 증명서, 분쟁 해결 절차가 존재하지 않습니다.</p>
+          </div>
+        </div>
+
+        <!-- PieceMarket 해결책 -->
+        <div style="margin-top: 32px;">
+          <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 22px;">✅</span> PieceMarket이 해결하는 방법
+          </h3>
+          <div class="problem-grid">
+            <div class="solution-card">
+              <div class="problem-icon">🏠</div>
+              <h4>실물 자산 기반</h4>
+              <p>포켓몬 카드, K-Pop 굿즈, 명품 등 <strong>실물이 존재하고 감정가가 있는 자산</strong>만 취급합니다. 디지털 증명서는 "등기부등본" 역할이지, 자산 그 자체가 아닙니다.</p>
+            </div>
+            <div class="solution-card">
+              <div class="problem-icon">🔐</div>
+              <h4>제3자 수탁 + 법적 권리</h4>
+              <p>실물은 <strong>전문 보관업체에 보관</strong>되고, 인증서에 보관 증명, 법적 권리, 블록체인 기록이 모두 포함됩니다. 운영자가 먹튀할 수 없는 구조입니다.</p>
+            </div>
+            <div class="solution-card">
+              <div class="problem-icon">👆</div>
+              <h4>쉬운 진입 (간편 지갑)</h4>
+              <p>이메일이나 카카오 로그인만으로 <strong>지갑이 자동으로 만들어지고</strong>, 신용카드 충전 가능. 전용 앱 설치나 복구 비밀번호 같은 건 필요 없습니다. 아버지도 쓸 수 있는 서비스입니다.</p>
+            </div>
+            <div class="solution-card">
+              <div class="problem-icon">⚡</div>
+              <h4>Base 체인: 빠르고 저렴</h4>
+              <p>네트워크 수수료 <strong>~15원</strong> (이더리움의 1/1000), 거래 처리 2초 완료. Coinbase가 수수료를 대납해주면 완전 무료. 속도와 비용 문제를 완전히 해결합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: 경쟁사 카드 -->
+      <div class="section">
+        <div class="section-label">Competitors</div>
+        <h2>주요 경쟁사 분석</h2>
+        <p class="desc">각 플랫폼의 특성과 PieceMarket의 차별화 포인트</p>
+
+        <div class="competitor-grid">
+          <!-- NBA Top Shot -->
+          <div class="comp-card nba">
+            <div class="comp-header">
+              <div class="comp-logo">🏀</div>
+              <div class="comp-info">
+                <h3>NBA Top Shot</h3>
+                <div class="comp-sub">Dapper Labs &middot; 자체 블록체인</div>
+              </div>
+            </div>
+            <div class="comp-tags">
+              <span class="comp-tag good">NBA 공식 라이선스</span>
+              <span class="comp-tag good">쉬운 결제</span>
+              <span class="comp-tag warn">디지털 전용</span>
+              <span class="comp-tag bad">실물 없음</span>
+            </div>
+            <div class="comp-desc">
+              NBA 하이라이트 영상 클립을 <strong>"모먼트(Moment)"</strong>라는 디지털 카드로 수집하는 플랫폼.
+              신용카드로 바로 구매 가능하지만, 자산은 100% 디지털이며 실물 배송은 절대 없습니다.
+              자체 지갑만 사용하므로 다른 플랫폼과 호환되지 않는 폐쇄 생태계입니다.
+            </div>
+            <div class="comp-specs">
+              <div class="comp-spec"><span class="spec-label">자산 유형</span><span class="spec-value">NBA 영상 클립 (디지털)</span></div>
+              <div class="comp-spec"><span class="spec-label">실물 배송</span><span class="spec-value no">❌ 없음</span></div>
+              <div class="comp-spec"><span class="spec-label">조각 투자</span><span class="spec-value no">❌ 불가</span></div>
+              <div class="comp-spec"><span class="spec-label">결제 수단</span><span class="spec-value">신용카드, 자체 지갑</span></div>
+              <div class="comp-spec"><span class="spec-label">블록체인</span><span class="spec-value">자체 네트워크 (폐쇄형)</span></div>
+              <div class="comp-spec"><span class="spec-label">대상 사용자</span><span class="spec-value">NBA 팬, 초보자</span></div>
+            </div>
+          </div>
+
+          <!-- Magic Eden -->
+          <div class="comp-card magic">
+            <div class="comp-header">
+              <div class="comp-logo">🪄</div>
+              <div class="comp-info">
+                <h3>Magic Eden</h3>
+                <div class="comp-sub">여러 블록체인 지원 &middot; 다양한 암호화폐</div>
+              </div>
+            </div>
+            <div class="comp-tags">
+              <span class="comp-tag good">여러 네트워크</span>
+              <span class="comp-tag good">다양한 장르</span>
+              <span class="comp-tag warn">일부 실물 연동</span>
+              <span class="comp-tag bad">암호화폐 필수</span>
+            </div>
+            <div class="comp-desc">
+              솔라나, 비트코인, 이더리움 등을 지원하는 <strong>"종합 NFT 백화점"</strong>.
+              아트, 게임 아이템, 프로필 이미지 등 거의 모든 종류의 디지털 수집품을 취급합니다.
+              <strong>"실물 수령 가능"</strong> 표시된 일부 상품은 실물을 받을 수 있지만, 대부분은 디지털 전용입니다.
+              뽑기, 확률형 구매 등 게임 같은 요소가 강합니다.
+            </div>
+            <div class="comp-specs">
+              <div class="comp-spec"><span class="spec-label">자산 유형</span><span class="spec-value">아트/게임/프로필 이미지 (대부분 디지털)</span></div>
+              <div class="comp-spec"><span class="spec-label">실물 배송</span><span class="spec-value partial">⚠️ 일부만 가능</span></div>
+              <div class="comp-spec"><span class="spec-label">조각 투자</span><span class="spec-value no">❌ 불가</span></div>
+              <div class="comp-spec"><span class="spec-label">결제 수단</span><span class="spec-value">암호화폐만 (솔라나, 비트코인 등)</span></div>
+              <div class="comp-spec"><span class="spec-label">블록체인</span><span class="spec-value">여러 네트워크 지원</span></div>
+              <div class="comp-spec"><span class="spec-label">대상 사용자</span><span class="spec-value">전문 컬렉터</span></div>
+            </div>
+          </div>
+
+          <!-- OpenSea -->
+          <div class="comp-card opensea">
+            <div class="comp-header">
+              <div class="comp-logo">🌊</div>
+              <div class="comp-info">
+                <h3>OpenSea</h3>
+                <div class="comp-sub">세계 최대 NFT 마켓 &middot; 이더리움 기반</div>
+              </div>
+            </div>
+            <div class="comp-tags">
+              <span class="comp-tag good">최대 거래량</span>
+              <span class="comp-tag warn">이미지 NFT 위주</span>
+              <span class="comp-tag bad">거래량 97% 감소</span>
+              <span class="comp-tag bad">자전거래 논란</span>
+            </div>
+            <div class="comp-desc">
+              세계 최대 NFT 마켓이었으나, 2024년 기준 <strong>거래량이 97% 하락</strong>했습니다.
+              원숭이 그림(BAYC), 픽셀 아바타 등 프로필 이미지 위주이며, 대부분 <strong>"라이선스"라 주장하지만 실제 법적 효력이 모호</strong>합니다.
+              자전거래(같은 사람이 가격을 인위적으로 올리는 행위)가 많아 실제 시장 크기보다 부풀려진 측면이 있습니다.
+              2024년 말 수수료 0%로 전환할 정도로 경쟁이 치열합니다.
+            </div>
+            <div class="comp-specs">
+              <div class="comp-spec"><span class="spec-label">자산 유형</span><span class="spec-value">프로필 이미지/아트/도메인 (디지털)</span></div>
+              <div class="comp-spec"><span class="spec-label">실물 배송</span><span class="spec-value no">❌ 없음</span></div>
+              <div class="comp-spec"><span class="spec-label">조각 투자</span><span class="spec-value no">❌ 불가</span></div>
+              <div class="comp-spec"><span class="spec-label">결제 수단</span><span class="spec-value">이더리움, 신용카드 일부</span></div>
+              <div class="comp-spec"><span class="spec-label">블록체인</span><span class="spec-value">이더리움 외 여러 네트워크</span></div>
+              <div class="comp-spec"><span class="spec-label">대상 사용자</span><span class="spec-value">암호화폐 숙련자</span></div>
+            </div>
+          </div>
+
+          <!-- PieceMarket (우리) -->
+          <div class="comp-card piece">
+            <div class="comp-badge ours">OUR SERVICE</div>
+            <div class="comp-header">
+              <div class="comp-logo">🧩</div>
+              <div class="comp-info">
+                <h3>PieceMarket</h3>
+                <div class="comp-sub">실물 자산 조각 투자 &middot; 저비용 체인 &middot; 디지털 달러</div>
+              </div>
+            </div>
+            <div class="comp-tags">
+              <span class="comp-tag good">실물 자산 기반</span>
+              <span class="comp-tag good">조각 투자 가능</span>
+              <span class="comp-tag good">제3자 수탁</span>
+              <span class="comp-tag good">신용카드 결제</span>
+            </div>
+            <div class="comp-desc">
+              실물 자산(포켓몬 카드, K-Pop 굿즈, 명품, 음원 저작권 등)을 <strong>디지털 조각으로 나눠서</strong>
+              누구나 소액으로 투자할 수 있는 플랫폼. 실물은 <strong>전문 보관업체에 안전하게 보관</strong>되며,
+              간편 지갑으로 <strong>일반인도 쉽게 이용</strong> 가능합니다.
+              디지털 달러(USDC) 결제로 글로벌 거래가 가능하고, 조각 교환 기능으로 컬렉터 생태계를 구축합니다.
+            </div>
+            <div class="comp-specs">
+              <div class="comp-spec"><span class="spec-label">자산 유형</span><span class="spec-value yes">실물 자산 + 음원 저작권</span></div>
+              <div class="comp-spec"><span class="spec-label">실물 배송</span><span class="spec-value yes">✅ 실물 수령 가능</span></div>
+              <div class="comp-spec"><span class="spec-label">조각 투자</span><span class="spec-value yes">✅ 소액 분할 가능</span></div>
+              <div class="comp-spec"><span class="spec-label">결제 수단</span><span class="spec-value yes">신용카드 + 디지털 달러</span></div>
+              <div class="comp-spec"><span class="spec-label">블록체인</span><span class="spec-value">Base 저비용 체인 (수수료 ~15원)</span></div>
+              <div class="comp-spec"><span class="spec-label">대상 사용자</span><span class="spec-value yes">일반인 + 컬렉터 + 투자자</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: 종합 비교 테이블 -->
+      <div class="section">
+        <div class="section-label">Comparison Matrix</div>
+        <h2>한눈에 비교하기</h2>
+        <p class="desc">핵심 기능별 4개 플랫폼 비교</p>
+
+        <div class="big-table-wrap">
+          <table class="big-table">
+            <thead>
+              <tr>
+                <th style="width:180px;">비교 항목</th>
+                <th>NBA Top Shot</th>
+                <th>Magic Eden</th>
+                <th>OpenSea</th>
+                <th class="ours-col">PieceMarket 🧩</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>자산 유형</td>
+                <td>NBA 영상 클립</td>
+                <td>아트/게임/프로필 이미지</td>
+                <td>프로필 이미지/아트/도메인</td>
+                <td class="ours-col"><span class="tbl-highlight">실물 자산 + 음원</span></td>
+              </tr>
+              <tr>
+                <td>실물 존재 여부</td>
+                <td class="tbl-no">❌ 없음</td>
+                <td class="tbl-partial">⚠️ 일부</td>
+                <td class="tbl-no">❌ 없음</td>
+                <td class="ours-col"><span class="tbl-yes">✅ 모두 실물</span></td>
+              </tr>
+              <tr>
+                <td>실물 배송 가능</td>
+                <td class="tbl-no">❌</td>
+                <td class="tbl-partial">⚠️ 일부만 가능</td>
+                <td class="tbl-no">❌</td>
+                <td class="ours-col"><span class="tbl-yes">✅ 실물 수령 가능</span></td>
+              </tr>
+              <tr>
+                <td>조각 투자 (분할 소유)</td>
+                <td class="tbl-no">❌</td>
+                <td class="tbl-no">❌</td>
+                <td class="tbl-no">❌</td>
+                <td class="ours-col"><span class="tbl-yes">✅ 소액 분할 가능</span></td>
+              </tr>
+              <tr>
+                <td>제3자 수탁 보관</td>
+                <td>-</td>
+                <td class="tbl-partial">⚠️ 일부 파트너</td>
+                <td class="tbl-no">❌</td>
+                <td class="ours-col"><span class="tbl-yes">✅ 전문 수탁기관</span></td>
+              </tr>
+              <tr>
+                <td>법적 소유권 증명</td>
+                <td class="tbl-partial">⚠️ 라이선스만</td>
+                <td class="tbl-no">❌ 모호</td>
+                <td class="tbl-no">❌ 모호</td>
+                <td class="ours-col"><span class="tbl-yes">✅ 인증서 발급</span></td>
+              </tr>
+              <tr>
+                <td>신용카드 결제</td>
+                <td class="tbl-yes">✅</td>
+                <td class="tbl-no">❌ 코인만</td>
+                <td class="tbl-partial">⚠️ 일부</td>
+                <td class="ours-col"><span class="tbl-yes">✅ (자동 환전)</span></td>
+              </tr>
+              <tr>
+                <td>가스비</td>
+                <td>자체 관리</td>
+                <td>$0.001~$50</td>
+                <td class="tbl-no">$2~200 (비쌈)</td>
+                <td class="ours-col"><span class="tbl-yes">~$0.01 (무료 가능)</span></td>
+              </tr>
+              <tr>
+                <td>거래 수수료</td>
+                <td>5%</td>
+                <td>2%</td>
+                <td>0~2.5%</td>
+                <td class="ours-col"><span class="tbl-highlight">2~5% (유형별)</span></td>
+              </tr>
+              <tr>
+                <td>조각 교환 기능</td>
+                <td class="tbl-no">❌</td>
+                <td class="tbl-no">❌</td>
+                <td class="tbl-no">❌</td>
+                <td class="ours-col"><span class="tbl-yes">✅ 조각 교환</span></td>
+              </tr>
+              <tr>
+                <td>컬렉션 시스템</td>
+                <td class="tbl-partial">⚠️ 세트 개념</td>
+                <td class="tbl-no">❌</td>
+                <td class="tbl-no">❌</td>
+                <td class="ours-col"><span class="tbl-yes">✅ 컬렉션 완성</span></td>
+              </tr>
+              <tr>
+                <td>비개발자 접근성</td>
+                <td class="tbl-yes">✅ 쉬움</td>
+                <td class="tbl-no">❌ 어려움</td>
+                <td class="tbl-partial">⚠️ 보통</td>
+                <td class="ours-col"><span class="tbl-yes">✅ 매우 쉬움 (간편 지갑)</span></td>
+              </tr>
+              <tr>
+                <td>타깃 시장</td>
+                <td>북미 스포츠팬</td>
+                <td>글로벌 암호화폐 사용자</td>
+                <td>글로벌 암호화폐 사용자</td>
+                <td class="ours-col"><span class="tbl-highlight">아시아 컬렉터 + 소액투자자</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section 4: 포지셔닝 맵 -->
+      <div class="section">
+        <div class="section-label">Positioning</div>
+        <h2>시장 포지셔닝 맵</h2>
+        <p class="desc">접근성(가로축)과 자산 실체성(세로축) 기준 위치</p>
+
+        <div class="position-visual">
+          <h3 style="font-size: 17px; font-weight: 700; margin-bottom: 8px;">경쟁 포지션 매트릭스</h3>
+
+          <div class="position-chart">
+            <!-- Axes -->
+            <div class="axis-line x"></div>
+            <div class="axis-line y"></div>
+            <div class="axis-label y-label">실물 자산 가치 ↑</div>
+            <div class="axis-label x-label">일반인 접근성 →</div>
+
+            <!-- Quadrant Labels -->
+            <div style="position:absolute; top:15px; left:50px; font-size:11px; color:var(--text-muted); opacity:0.5;">디지털 자산 + 어려움</div>
+            <div style="position:absolute; top:15px; right:25px; font-size:11px; color:var(--text-muted); opacity:0.5;">디지털 자산 + 쉬움</div>
+            <div style="position:absolute; bottom:30px; left:50px; font-size:11px; color:var(--text-muted); opacity:0.5;">실물 자산 + 어려움</div>
+            <div style="position:absolute; bottom:30px; right:25px; font-size:11px; color:var(--accent-light); opacity:0.8; font-weight:700;">실물 자산 + 쉬움 ★</div>
+
+            <!-- Dots -->
+            <div class="plot-dot opensea-dot" style="left: 30%; top: 25%;">
+              🌊
+              <span class="dot-label">OpenSea</span>
+            </div>
+
+            <div class="plot-dot magic-dot" style="left: 22%; top: 35%;">
+              🪄
+              <span class="dot-label">Magic Eden</span>
+            </div>
+
+            <div class="plot-dot nba-dot" style="left: 65%; top: 20%;">
+              🏀
+              <span class="dot-label">NBA Top Shot</span>
+            </div>
+
+            <div class="plot-dot piece-dot" style="right: 12%; bottom: 35%;">
+              🧩
+              <span class="dot-label" style="color: var(--primary-light);">PieceMarket</span>
+            </div>
+          </div>
+
+          <div class="highlight-box" style="margin-top: 16px;">
+            <div class="hl-icon">🎯</div>
+            <div class="hl-text">
+              <h4>PieceMarket의 유일한 포지션</h4>
+              <p>
+                기존 NFT 플랫폼은 모두 <strong>"디지털 자산"</strong> 영역에 위치합니다.
+                PieceMarket은 <strong>"실물 자산 + 높은 접근성"</strong>이라는 블루오션에 유일하게 위치하며,
+                조각 투자 + 교환 기능으로 경쟁사가 따라할 수 없는 차별화된 가치를 제공합니다.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 5: 핵심 차별화 요약 -->
+      <div class="section">
+        <div class="section-label">Our Edge</div>
+        <h2>PieceMarket만의 차별점</h2>
+        <p class="desc">경쟁사 대비 결정적 우위 요소 5가지</p>
+
+        <div class="fee-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+          <div class="fee-card buy" style="text-align:center;">
+            <div style="font-size:36px; margin-bottom:10px;">🏠</div>
+            <div class="fee-label">핵심 차별점 1</div>
+            <div style="font-size:17px; font-weight:800; color:var(--primary-light); margin-bottom:6px;">실물 자산 기반</div>
+            <div class="fee-desc">JPEG가 아닌 <strong>실제 물건</strong>의 소유권. 감정가가 존재하고 수탁기관이 보관합니다.</div>
+          </div>
+          <div class="fee-card sell" style="text-align:center;">
+            <div style="font-size:36px; margin-bottom:10px;">🧩</div>
+            <div class="fee-label">핵심 차별점 2</div>
+            <div style="font-size:17px; font-weight:800; color:var(--accent-light); margin-bottom:6px;">조각 분할 투자</div>
+            <div class="fee-desc">$50,000짜리 포켓몬 카드를 <strong>1,000조각</strong>으로 나눠 $50부터 투자 가능. 경쟁사 중 유일합니다.</div>
+          </div>
+          <div class="fee-card listing" style="text-align:center;">
+            <div style="font-size:36px; margin-bottom:10px;">🔄</div>
+            <div class="fee-label">핵심 차별점 3</div>
+            <div style="font-size:17px; font-weight:800; color:#A78BFA; margin-bottom:6px;">조각 교환</div>
+            <div class="fee-desc">다른 자산 조각끼리 <strong>직접 교환</strong>. 컬렉션 완성 시스템으로 거래 활성화.</div>
+          </div>
+          <div class="fee-card swap" style="text-align:center;">
+            <div style="font-size:36px; margin-bottom:10px;">📜</div>
+            <div class="fee-label">핵심 차별점 4</div>
+            <div style="font-size:17px; font-weight:800; color:#F472B6; margin-bottom:6px;">인증서 시스템</div>
+            <div class="fee-desc">보관 증명 + 법적 권리 + 블록체인 기록 + 간편 지갑. <strong>4중 신뢰 구조</strong>로 투명성 확보.</div>
+          </div>
+          <div class="fee-card gas" style="text-align:center;">
+            <div style="font-size:36px; margin-bottom:10px;">👆</div>
+            <div class="fee-label">핵심 차별점 5</div>
+            <div style="font-size:17px; font-weight:800; color:#FBBF24; margin-bottom:6px;">극강의 접근성</div>
+            <div class="fee-desc">카카오/구글 로그인, 자동 지갑, 카드 결제, <strong>한/영/인도네시아어</strong>. 블록체인을 몰라도 사용 가능.</div>
+          </div>
+        </div>
+
+        <div class="highlight-box" style="margin-top: 28px; border-color: rgba(16, 185, 129, 0.2); background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(16, 185, 129, 0.02));">
+          <div class="hl-icon">💡</div>
+          <div class="hl-text">
+            <h4>한 문장 요약</h4>
+            <p style="font-size:16px; font-weight:600;">
+              <strong>"OpenSea가 디지털 그림의 eBay라면, PieceMarket은 실물 자산의 주식시장입니다."</strong><br>
+              <span style="font-size:14px; font-weight:400;">이미지 NFT의 투기적 거래가 아닌, 실물 가치에 기반한 조각 투자 — 이것이 우리의 핵심입니다.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 7: 전문용어집 ==================== -->
+    <div id="tab-glossary" class="tab-content">
+      <div class="section">
+        <div class="section-label">Glossary</div>
+        <h2>전문 용어 사전</h2>
+        <p class="desc">이 문서에 등장하는 기술 용어를 쉽게 풀어 설명합니다</p>
+
+        <input type="text" class="glossary-search" placeholder="🔍 용어 검색... (예: 가스비, NFT, 블록체인)" oninput="filterGlossary(this.value)">
+
+        <!-- 블록체인 기초 -->
+        <div class="glossary-category" data-category="blockchain">
+          <div class="glossary-category-title"><span>⛓️</span> 블록체인 기초</div>
+          <div class="glossary-list">
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>블록체인 <span class="eng">Blockchain</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">📒 모든 거래가 기록되는 "공유 장부"</div>
+                <div class="gd-desc">은행 없이도 누가 무엇을 가지고 있는지 모든 사람이 확인할 수 있는 기록 시스템입니다. 한 번 기록되면 수정이나 삭제가 불가능하여 위변조가 불가능합니다.</div>
+                <div class="gd-example">💡 비유: 모든 반 학생이 똑같이 가진 출석부. 한 사람이 몰래 고쳐도 나머지 29명 것과 다르니까 <strong>조작이 불가능</strong>합니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>NFT <span class="eng">Non-Fungible Token</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🎫 세상에 단 하나뿐인 "디지털 소유권 증명서"</div>
+                <div class="gd-desc">만원짜리는 어떤 만원이든 같은 가치이지만, NFT는 각각 고유합니다. "이 포켓몬 카드의 3번 조각은 홍길동 소유"라는 것을 블록체인에 기록한 것입니다.</div>
+                <div class="gd-example">💡 비유: 아파트 등기부등본. 등기부등본 자체가 집은 아니지만, <strong>"이 집이 내 것"이라는 증명서</strong>입니다. NFT도 마찬가지입니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>ERC-1155</h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🧩 하나의 자산을 여러 조각으로 나눌 수 있는 기술 규격</div>
+                <div class="gd-desc">이더리움 블록체인의 표준 중 하나로, 하나의 물건에 대해 1,000개, 10,000개 등 여러 개의 소유권 조각을 만들 수 있습니다. PieceMarket이 "조각 투자"를 가능하게 하는 핵심 기술입니다.</div>
+                <div class="gd-example">💡 비유: $50,000짜리 포켓몬 카드를 1,000조각으로 나누면, <strong>1조각 = $50</strong>에 투자 가능. 이 "나누기"를 ERC-1155가 해줍니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>가스비 <span class="eng">Gas Fee</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">⛽ 블록체인을 사용할 때 내는 "네트워크 이용료"</div>
+                <div class="gd-desc">블록체인에 거래를 기록하려면 네트워크에 수수료를 내야 합니다. 이더리움 기본 네트워크는 건당 $2~200으로 비싸지만, Base 체인은 건당 ~15원으로 매우 저렴합니다.</div>
+                <div class="gd-example">💡 비유: 택배비와 비슷합니다. 일반 택배(이더리움)는 비싸지만, <strong>근거리 퀵(Base)은 아주 쌉니다.</strong></div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>스마트 컨트랙트 <span class="eng">Smart Contract</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🤖 조건이 충족되면 자동으로 실행되는 "디지털 계약서"</div>
+                <div class="gd-desc">사람의 개입 없이 코드로 작성된 규칙에 따라 자동 실행됩니다. 예를 들어 "A가 1,000 USDC를 보내면, B의 조각 10개를 A에게 전송한다"를 자동으로 처리합니다.</div>
+                <div class="gd-example">💡 비유: 자동판매기. 동전을 넣으면(조건) 음료가 나오는 것(실행)처럼, <strong>코드가 약속을 자동으로 이행</strong>합니다.</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 체인 & 네트워크 -->
+        <div class="glossary-category" data-category="chain">
+          <div class="glossary-category-title"><span>🌐</span> 체인 & 네트워크</div>
+          <div class="glossary-list">
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>이더리움 <span class="eng">Ethereum</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🏛️ 세계에서 가장 큰 블록체인 "본점"</div>
+                <div class="gd-desc">NFT와 디지털 자산 거래의 원조 블록체인입니다. 보안은 최고이지만 사용자가 많아 수수료가 비싸고 느릴 수 있습니다. 대부분의 NFT 프로젝트가 여기서 시작됩니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>Base 체인 <span class="eng">Base L2</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🚄 이더리움의 "고속도로 지선" — 빠르고 저렴</div>
+                <div class="gd-desc">Coinbase가 만든 이더리움 위의 보조 네트워크(Layer 2)입니다. 이더리움의 보안을 그대로 이용하면서 수수료는 1/1000, 속도는 2초. PieceMarket이 사용하는 체인입니다.</div>
+                <div class="gd-example">💡 비유: 고속도로(이더리움)가 정체될 때, 나란히 달리는 <strong>전용 고속차로(Base)</strong>를 타는 것과 같습니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>L1 / L2 <span class="eng">Layer 1 / Layer 2</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🏢 1층(기본 네트워크)과 2층(보조 네트워크)</div>
+                <div class="gd-desc"><strong>L1</strong>은 이더리움, 비트코인 같은 기본 블록체인. <strong>L2</strong>는 L1 위에 올라가서 더 빠르고 저렴하게 동작하는 보조 네트워크입니다. Base, Polygon, Arbitrum 등이 L2입니다.</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 지갑 & 결제 -->
+        <div class="glossary-category" data-category="wallet">
+          <div class="glossary-category-title"><span>👛</span> 지갑 & 결제</div>
+          <div class="glossary-list">
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>USDC <span class="eng">USD Coin</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">💵 1개 = 1달러인 "디지털 달러"</div>
+                <div class="gd-desc">Circle이라는 회사가 발행하는 스테이블코인입니다. 비트코인처럼 가격이 오르내리지 않고 항상 1달러 = 1 USDC입니다. PieceMarket의 모든 거래에 사용됩니다.</div>
+                <div class="gd-example">💡 왜 원화 대신? 한국, 인도네시아, 미국 사용자가 모두 <strong>같은 가격으로 거래</strong>할 수 있고, 환율 변동 걱정이 없습니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>AA 지갑 <span class="eng">Account Abstraction Wallet</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">📱 이메일 로그인만으로 자동 생성되는 "간편 지갑"</div>
+                <div class="gd-desc">기존 암호화폐 지갑은 전용 앱 설치 + 복구 비밀번호(시드구문) 백업이 필요했습니다. AA 지갑은 이 모든 걸 없앴습니다. 카카오나 구글 로그인만 하면 지갑이 자동으로 만들어집니다.</div>
+                <div class="gd-example">💡 비유: 예전에는 은행에 직접 가서 통장을 만들어야 했지만, 이제는 <strong>카카오뱅크처럼 앱에서 바로 계좌 개설</strong>하는 것과 같습니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>시드 구문 <span class="eng">Seed Phrase</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🔑 12~24개 영단어로 된 "지갑 복구 비밀번호"</div>
+                <div class="gd-desc">기존 암호화폐 지갑의 최종 복구 수단입니다. 이걸 잃어버리면 자산을 영영 찾을 수 없어서 종이에 적어 금고에 보관해야 했습니다. AA 지갑은 이게 필요 없습니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>Paymaster <span class="eng">가스비 대납 서비스</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🎁 네트워크 수수료를 플랫폼이 대신 내주는 서비스</div>
+                <div class="gd-desc">사용자가 가스비를 직접 내지 않아도 Coinbase가 대신 납부해줍니다. Base 체인에서는 이 서비스가 무료로 제공됩니다.</div>
+                <div class="gd-example">💡 비유: 놀이공원 자유이용권처럼, 입장하면 <strong>각 놀이기구(거래)마다 돈을 낼 필요 없이</strong> 자유롭게 이용합니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>온램프 <span class="eng">Onramp</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">💳 현금(원화) → 디지털 달러(USDC) 자동 환전</div>
+                <div class="gd-desc">신용카드로 결제하면 자동으로 USDC로 환전하여 앱 지갑에 넣어주는 서비스입니다. PieceMarket은 Coinbase Onramp API를 사용합니다.</div>
+                <div class="gd-example">💡 비유: 해외여행 갈 때 공항 환전소에서 <strong>원화를 달러로 바꾸는 것</strong>의 디지털 버전입니다.</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 투자 & 거래 -->
+        <div class="glossary-category" data-category="invest">
+          <div class="glossary-category-title"><span>📊</span> 투자 & 거래</div>
+          <div class="glossary-list">
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>RWA <span class="eng">Real World Assets</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🏠 실제로 만질 수 있는 "진짜 물건"</div>
+                <div class="gd-desc">포켓몬 카드, 명품 가방, 와인, 미술품 등 실물이 존재하는 자산입니다. 디지털 그림(JPEG)과 달리 감정가가 있고 실제로 손에 들 수 있습니다.</div>
+                <div class="gd-example">💡 PieceMarket이 다루는 것: 포켓몬 카드, K-Pop 굿즈, 명품, 음원 저작권 → <strong>모두 실물 가치가 있는 자산</strong></div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>조각 투자 <span class="eng">Fractional Investment</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🧩 비싼 물건을 여러 조각으로 나눠 소액으로 투자</div>
+                <div class="gd-desc">$50,000짜리 포켓몬 카드를 혼자 사기엔 부담스럽지만, 1,000조각으로 나누면 $50부터 투자할 수 있습니다. 주식 시장의 "1주"를 사는 것과 비슷합니다.</div>
+                <div class="gd-example">💡 비유: 부동산 공동구매. 10억 빌딩을 혼자 못 사지만, <strong>100명이 1,000만원씩 나눠 사면 가능</strong>한 것과 같습니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>교환 (스왑) <span class="eng">Swap</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🔄 내 조각과 다른 사람의 조각을 직접 맞바꾸기</div>
+                <div class="gd-desc">"팔고 → 다시 사기" 대신 직접 교환하면 수수료가 40% 절약됩니다. 팔면 5%(판매2%+구매3%)이지만, 교환은 3%(양쪽 1.5%)입니다.</div>
+                <div class="gd-example">💡 비유: 학교에서 포켓몬 카드 <strong>"내 리자몽이랑 네 피카츄 바꿀래?"</strong> 하는 것과 같습니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>수탁 <span class="eng">Custody</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🔐 실물을 전문 보관업체가 안전하게 맡아두는 것</div>
+                <div class="gd-desc">조각으로 나눈 실물 자산은 개인이 보관할 수 없으므로, 전문 보관업체(수탁기관)가 금고에서 안전하게 관리합니다. 보관 증명서가 발급됩니다.</div>
+                <div class="gd-example">💡 비유: 귀금속을 <strong>은행 금고에 맡기는 것</strong>과 같습니다. 언제든 조건 충족 시 돌려받을 수 있습니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>자전거래 (세탁 거래) <span class="eng">Wash Trading</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🎰 같은 사람이 자기끼리 사고팔아 가격을 부풀리는 사기</div>
+                <div class="gd-desc">A가 자신의 다른 지갑 B에게 높은 가격에 팔면, 기록상 "거래 발생 + 가격 상승"이 됩니다. 실제 수요 없이 인위적으로 시세를 조작하는 행위입니다.</div>
+                <div class="gd-example">💡 PieceMarket은 실물 기반이라 감정가가 있어 <strong>터무니없는 가격 조작이 어렵습니다.</strong></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 회사 & 서비스 -->
+        <div class="glossary-category" data-category="company">
+          <div class="glossary-category-title"><span>🏢</span> 회사 & 서비스</div>
+          <div class="glossary-list">
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>Coinbase <span class="eng">코인베이스</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🏦 미국 최대 암호화폐 거래소 + 블록체인 인프라 회사</div>
+                <div class="gd-desc">나스닥 상장 기업(시가총액 약 70조원)으로 Base 체인, Smart Wallet, Paymaster, Onramp 등 PieceMarket이 사용하는 대부분의 기술 인프라를 제공합니다.</div>
+                <div class="gd-example">💡 비유: 블록체인 세계의 <strong>AWS(아마존 웹서비스)</strong>. 인프라를 빌려쓰되 우리가 직접 만들 필요 없습니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>OpenSea <span class="eng">오픈씨</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🌊 세계 최대 NFT 거래소 (현재 거래량 97% 하락)</div>
+                <div class="gd-desc">2021-22년 NFT 붐의 중심이었으나, 실물 가치 없는 이미지 NFT 위주로 버블 붕괴 후 급격히 쇠퇴했습니다. PieceMarket이 풀고자 하는 "기존 NFT 시장의 문제"를 대표하는 플랫폼입니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>MetaMask <span class="eng">메타마스크</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🦊 가장 유명한 암호화폐 전용 지갑 앱</div>
+                <div class="gd-desc">브라우저 확장 프로그램이나 모바일 앱으로 설치해서 쓰는 개인 지갑입니다. 설치, 시드구문 백업, 네트워크 설정 등이 필요해 초보자에게 어렵습니다. PieceMarket은 이런 과정이 필요 없는 AA 지갑을 사용합니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>Vercel <span class="eng">버셀</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">☁️ 웹사이트를 인터넷에 올려주는 무료 호스팅 서비스</div>
+                <div class="gd-desc">코드를 올리면 자동으로 전 세계 어디서든 접속할 수 있는 웹사이트로 만들어줍니다. 무료 플랜으로도 충분하며, PieceMarket 데모 버전이 여기서 운영됩니다.</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 약자 & 기호 -->
+        <div class="glossary-category" data-category="abbr">
+          <div class="glossary-category-title"><span>🔤</span> 자주 나오는 약자</div>
+          <div class="glossary-list">
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>PFP <span class="eng">Profile Picture</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🐵 SNS 프로필 사진으로 쓰는 NFT (원숭이 그림 등)</div>
+                <div class="gd-desc">BAYC(지루한 원숭이), CryptoPunks 같은 프로필 이미지용 NFT입니다. 한때 수억 원에 거래되었으나 현재 가치가 90% 이상 하락했습니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>BAYC <span class="eng">Bored Ape Yacht Club</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🐒 가장 유명한 (그리고 가장 많이 떨어진) NFT 프로젝트</div>
+                <div class="gd-desc">원숭이 그림 10,000개로 구성된 NFT 컬렉션. 최고가 $400,000에서 $30,000으로 92% 하락했습니다. "이미지 NFT의 한계"를 보여주는 대표 사례입니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>KYC <span class="eng">Know Your Customer</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">🪪 "본인 확인 절차" — 신분증 확인</div>
+                <div class="gd-desc">금융 서비스 이용 전 신분증, 얼굴 인증 등으로 본인 여부를 확인하는 절차입니다. 돈세탁 방지와 법적 의무를 위해 필요합니다.</div>
+              </div>
+            </div>
+
+            <div class="glossary-item" onclick="toggleGlossary(this)">
+              <div class="glossary-term">
+                <h4>STO <span class="eng">Security Token Offering</span></h4>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="glossary-detail">
+                <div class="gd-simple">📜 법적으로 인정받는 "디지털 증권 발행"</div>
+                <div class="gd-desc">조각 투자가 법적으로 "증권"에 해당할 수 있어, 금융당국의 허가가 필요할 수 있습니다. PieceMarket의 향후 과제 중 하나입니다.</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>PieceMarket &middot; 실물 자산 조각 투자 플랫폼</p>
+      <p style="margin-top:8px;">Confidential &middot; 2026</p>
+    </div>
+
+  </div>
+
+  <script>
+    function showTab(tabId) {
+      // Hide all tabs
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+      // Show selected
+      document.getElementById('tab-' + tabId).classList.add('active');
+
+      // Activate button
+      const buttons = document.querySelectorAll('.tab-btn');
+      const tabMap = ['fees', 'flow', 'process', 'charge', 'infra', 'compete', 'glossary'];
+      const idx = tabMap.indexOf(tabId);
+      if (idx >= 0) buttons[idx].classList.add('active');
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleGlossary(el) {
+      el.classList.toggle('open');
+    }
+
+    function filterGlossary(query) {
+      const q = query.toLowerCase().trim();
+      document.querySelectorAll('.glossary-item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = (!q || text.includes(q)) ? '' : 'none';
+      });
+      document.querySelectorAll('.glossary-category').forEach(cat => {
+        const visible = cat.querySelectorAll('.glossary-item[style=""], .glossary-item:not([style])');
+        cat.style.display = visible.length ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

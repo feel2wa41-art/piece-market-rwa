@@ -54,6 +54,11 @@ export function ProfileScreen({navigation}: ProfileScreenProps) {
       onPress: () => navigation.navigate('LanguageSettings'),
     },
     {
+      label: t('docs.title'),
+      value: '>',
+      onPress: () => navigation.navigate('Docs' as any),
+    },
+    {
       label: t('profile.notifications'),
       value: '>',
       onPress: () => {},

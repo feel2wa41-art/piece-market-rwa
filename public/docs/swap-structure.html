@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PieceMarket - 조각 교환 구조도</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    :root {
+      --primary: #2563EB;
+      --primary-light: #3B82F6;
+      --accent: #10B981;
+      --accent-light: #34D399;
+      --warning: #F59E0B;
+      --purple: #8B5CF6;
+      --pink: #EC4899;
+      --cyan: #06B6D4;
+      --bg: #0F172A;
+      --bg-card: #1E293B;
+      --text: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --border: #334155;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg); color: var(--text);
+      line-height: 1.6;
+    }
+
+    body::before {
+      content: ''; position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background:
+        radial-gradient(ellipse at 25% 50%, rgba(6, 182, 212, 0.07) 0%, transparent 50%),
+        radial-gradient(ellipse at 75% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+      z-index: -1;
+    }
+
+    .container { max-width: 960px; margin: 0 auto; padding: 40px 24px; }
+
+    /* Header */
+    .header { text-align: center; margin-bottom: 48px; }
+
+    .header-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 18px; border-radius: 50px; margin-bottom: 16px;
+      background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.25);
+      font-size: 13px; font-weight: 600; color: #22D3EE;
+    }
+
+    .header h1 {
+      font-size: 40px; font-weight: 900; line-height: 1.15; margin-bottom: 10px;
+      background: linear-gradient(135deg, #fff 20%, #22D3EE 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .header .sub { font-size: 16px; color: var(--text-secondary); }
+
+    /* Section */
+    .section { margin-bottom: 56px; }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: #22D3EE; margin-bottom: 10px;
+    }
+    .section-label::before { content: ''; width: 18px; height: 2px; background: var(--cyan); border-radius: 1px; }
+    .section h2 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+    .section .desc { font-size: 15px; color: var(--text-secondary); margin-bottom: 28px; }
+
+    /* ===== VS Diagram ===== */
+    .vs-container {
+      display: grid; grid-template-columns: 1fr 80px 1fr; gap: 0;
+      align-items: center; margin-bottom: 24px;
+    }
+
+    .vs-box {
+      padding: 28px 24px; border-radius: 20px;
+      border: 1px solid var(--border); background: var(--bg-card);
+    }
+
+    .vs-box.old { border-color: rgba(239, 68, 68, 0.25); }
+    .vs-box.new { border-color: rgba(6, 182, 212, 0.3); box-shadow: 0 8px 32px rgba(6, 182, 212, 0.1); }
+
+    .vs-box .vs-title {
+      font-size: 14px; font-weight: 700; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .vs-box.old .vs-title { color: #F87171; }
+    .vs-box.new .vs-title { color: #22D3EE; }
+
+    .vs-step-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .vs-step {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 10px;
+      background: rgba(255,255,255,0.03); font-size: 14px;
+    }
+
+    .vs-step .vs-icon { font-size: 18px; flex-shrink: 0; }
+    .vs-step .vs-text { flex: 1; color: var(--text-secondary); }
+    .vs-step .vs-text strong { color: var(--text); }
+
+    .vs-step .vs-fee {
+      font-size: 13px; font-weight: 700; flex-shrink: 0;
+      padding: 3px 10px; border-radius: 50px;
+    }
+
+    .vs-box.old .vs-fee { background: rgba(239, 68, 68, 0.12); color: #F87171; }
+    .vs-box.new .vs-fee { background: rgba(6, 182, 212, 0.12); color: #22D3EE; }
+
+    .vs-center {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+    }
+
+    .vs-badge {
+      font-size: 24px; font-weight: 900;
+      background: linear-gradient(135deg, var(--cyan), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .vs-label { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+
+    .vs-total {
+      margin-top: 14px; padding: 10px 14px; border-radius: 10px;
+      text-align: center; font-size: 14px; font-weight: 700;
+    }
+
+    .vs-box.old .vs-total { background: rgba(239, 68, 68, 0.08); color: #F87171; }
+    .vs-box.new .vs-total { background: rgba(6, 182, 212, 0.08); color: #22D3EE; }
+
+    /* ===== Main Flow Diagram ===== */
+    .flow-diagram {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 24px; padding: 36px; position: relative; overflow: hidden;
+    }
+
+    .flow-diagram::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--cyan), var(--accent), var(--purple));
+    }
+
+    .flow-diagram h3 {
+      font-size: 18px; font-weight: 800; margin-bottom: 28px;
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .flow-steps { display: flex; flex-direction: column; gap: 0; }
+
+    .flow-step {
+      display: flex; gap: 20px; position: relative;
+    }
+
+    .flow-step-line {
+      display: flex; flex-direction: column; align-items: center;
+      width: 56px; flex-shrink: 0;
+    }
+
+    .flow-step-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0; position: relative; z-index: 1;
+    }
+
+    .flow-step:nth-child(1) .flow-step-icon { background: rgba(37, 99, 235, 0.15); }
+    .flow-step:nth-child(2) .flow-step-icon { background: rgba(139, 92, 246, 0.15); }
+    .flow-step:nth-child(3) .flow-step-icon { background: rgba(6, 182, 212, 0.15); }
+    .flow-step:nth-child(4) .flow-step-icon { background: rgba(245, 158, 11, 0.15); }
+    .flow-step:nth-child(5) .flow-step-icon { background: rgba(16, 185, 129, 0.15); }
+
+    .flow-step-connector {
+      width: 2px; flex: 1; min-height: 16px;
+      background: linear-gradient(to bottom, var(--border), transparent);
+      margin: 4px 0;
+    }
+
+    .flow-step-body { flex: 1; padding-bottom: 28px; }
+    .flow-step:last-child .flow-step-body { padding-bottom: 0; }
+
+    .flow-step-body h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .flow-step-body p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+    .flow-step-detail {
+      margin-top: 12px; padding: 16px 20px; border-radius: 14px;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    }
+
+    /* ===== Swap Visual ===== */
+    .swap-visual {
+      display: grid; grid-template-columns: 1fr 60px 1fr; gap: 0;
+      align-items: center; margin-top: 12px;
+    }
+
+    .swap-party {
+      padding: 16px; border-radius: 14px;
+      border: 1px solid var(--border); background: var(--bg);
+      text-align: center;
+    }
+
+    .swap-party .sp-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 8px;
+    }
+
+    .swap-party.give .sp-label { color: #F472B6; }
+    .swap-party.get .sp-label { color: #22D3EE; }
+
+    .swap-party .sp-icon { font-size: 32px; margin-bottom: 6px; }
+    .swap-party .sp-name { font-size: 14px; font-weight: 700; }
+    .swap-party .sp-amount { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+    .swap-arrow-center {
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .swap-arrow-icon {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3);
+    }
+
+    /* ===== Collection System ===== */
+    .collection-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .collection-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px; text-align: center;
+      transition: all 0.3s;
+    }
+
+    .collection-card:hover {
+      border-color: var(--cyan); transform: translateY(-2px);
+    }
+
+    .collection-card .cc-icon { font-size: 32px; margin-bottom: 8px; }
+    .collection-card .cc-name { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+
+    .collection-slots {
+      display: flex; gap: 6px; justify-content: center;
+    }
+
+    .slot {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+    }
+
+    .slot.filled {
+      background: rgba(16, 185, 129, 0.15); color: var(--accent-light);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .slot.empty {
+      background: rgba(255,255,255,0.04); color: var(--text-muted);
+      border: 1px dashed var(--border);
+    }
+
+    .collection-card .cc-status {
+      margin-top: 10px; font-size: 12px; font-weight: 600;
+    }
+
+    .cc-status.complete { color: var(--accent-light); }
+    .cc-status.partial { color: var(--warning); }
+
+    /* ===== Fee Comparison ===== */
+    .fee-compare-box {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 32px; margin-top: 24px;
+    }
+
+    .fee-bar-row {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .fee-bar-label {
+      width: 120px; font-size: 14px; font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .fee-bar-track {
+      flex: 1; height: 36px; border-radius: 10px;
+      background: rgba(255,255,255,0.04); position: relative;
+      overflow: hidden;
+    }
+
+    .fee-bar-fill {
+      height: 100%; border-radius: 10px;
+      display: flex; align-items: center; padding-left: 14px;
+      font-size: 13px; font-weight: 700;
+      transition: width 0.8s ease;
+    }
+
+    .fee-bar-fill.old {
+      background: linear-gradient(90deg, rgba(239, 68, 68, 0.3), rgba(239, 68, 68, 0.15));
+      color: #F87171; width: 100%;
+    }
+
+    .fee-bar-fill.new {
+      background: linear-gradient(90deg, rgba(6, 182, 212, 0.3), rgba(6, 182, 212, 0.15));
+      color: #22D3EE; width: 60%;
+    }
+
+    .fee-bar-save {
+      width: 80px; text-align: right; flex-shrink: 0;
+      font-size: 14px; font-weight: 800;
+    }
+
+    .fee-bar-save.red { color: #F87171; }
+    .fee-bar-save.green { color: var(--accent-light); }
+
+    /* ===== Matching System ===== */
+    .match-flow {
+      display: grid; grid-template-columns: 1fr 44px 1fr;
+      gap: 0; align-items: stretch;
+    }
+
+    .match-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px;
+    }
+
+    .match-card h4 {
+      font-size: 14px; font-weight: 700; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .match-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 12px; border-radius: 10px;
+      background: rgba(255,255,255,0.03); margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .match-item:last-child { margin-bottom: 0; }
+    .match-item .mi-icon { font-size: 20px; }
+    .match-item .mi-text { flex: 1; color: var(--text-secondary); }
+    .match-item .mi-count { font-weight: 700; font-size: 12px; color: var(--text-muted); }
+
+    .match-arrow {
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .match-arrow-icon {
+      font-size: 20px; color: var(--cyan);
+    }
+
+    /* ===== Smart Contract Flow ===== */
+    .sc-flow {
+      display: flex; align-items: center; gap: 0;
+      overflow-x: auto; padding: 8px 0;
+    }
+
+    .sc-node {
+      padding: 14px 20px; border-radius: 14px;
+      text-align: center; flex-shrink: 0; min-width: 140px;
+    }
+
+    .sc-node .sc-icon { font-size: 24px; margin-bottom: 6px; }
+    .sc-node .sc-label { font-size: 12px; font-weight: 700; }
+    .sc-node .sc-detail { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    .sc-node.user { background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.25); }
+    .sc-node.contract { background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.25); }
+    .sc-node.chain { background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.25); }
+    .sc-node.result { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); }
+
+    .sc-arrow {
+      font-size: 16px; color: var(--text-muted); padding: 0 6px; flex-shrink: 0;
+    }
+
+    /* ===== Highlight ===== */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.08), rgba(16, 185, 129, 0.04));
+      border: 1px solid rgba(6, 182, 212, 0.2); border-radius: 16px;
+      padding: 22px 24px; margin-top: 24px;
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+
+    .highlight-box .hl-icon { font-size: 22px; flex-shrink: 0; }
+    .highlight-box .hl-text h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .highlight-box .hl-text p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* Footer */
+    .footer {
+      text-align: center; padding: 32px 0;
+      color: var(--text-muted); font-size: 13px;
+      border-top: 1px solid var(--border); margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 { font-size: 28px; }
+      .vs-container { grid-template-columns: 1fr; gap: 16px; }
+      .vs-center { flex-direction: row; padding: 8px 0; }
+      .swap-visual { grid-template-columns: 1fr; gap: 12px; }
+      .match-flow { grid-template-columns: 1fr; gap: 12px; }
+      .sc-flow { flex-wrap: wrap; justify-content: center; }
+      .collection-grid { grid-template-columns: 1fr 1fr; }
+      .fee-bar-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .fee-bar-label { width: auto; }
+      .fee-bar-save { width: auto; text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-badge">🔄 Swap System Architecture</div>
+      <h1>조각 교환 구조도</h1>
+      <p class="sub">보유한 조각을 다른 자산의 조각으로 직접 교환하는 시스템</p>
+    </div>
+
+    <!-- ===== 1. 기존 vs 교환 ===== -->
+    <div class="section">
+      <div class="section-label">Comparison</div>
+      <h2>왜 교환인가?</h2>
+      <p class="desc">기존 방식(판매 후 재구매)과 직접 교환의 차이</p>
+
+      <div class="vs-container">
+        <!-- Old way -->
+        <div class="vs-box old">
+          <div class="vs-title">❌ 기존 방식 (판매 후 재구매)</div>
+          <div class="vs-step-list">
+            <div class="vs-step">
+              <span class="vs-icon">1️⃣</span>
+              <span class="vs-text">내 <strong>리자몽 5조각</strong> 판매</span>
+              <span class="vs-fee">-2%</span>
+            </div>
+            <div class="vs-step">
+              <span class="vs-icon">2️⃣</span>
+              <span class="vs-text">USDC 수령 후 대기</span>
+              <span class="vs-fee">시간</span>
+            </div>
+            <div class="vs-step">
+              <span class="vs-icon">3️⃣</span>
+              <span class="vs-text"><strong>BTS 앨범 3조각</strong> 구매</span>
+              <span class="vs-fee">-3%</span>
+            </div>
+          </div>
+          <div class="vs-total">총 수수료: 5% ($12.50)</div>
+        </div>
+
+        <!-- VS -->
+        <div class="vs-center">
+          <div class="vs-badge">VS</div>
+          <div class="vs-label">비교</div>
+        </div>
+
+        <!-- New way -->
+        <div class="vs-box new">
+          <div class="vs-title">✅ 직접 교환 (Swap)</div>
+          <div class="vs-step-list">
+            <div class="vs-step">
+              <span class="vs-icon">1️⃣</span>
+              <span class="vs-text"><strong>리자몽 5조각 &harr; BTS 3조각</strong> 바로 교환</span>
+              <span class="vs-fee">-1.5%</span>
+            </div>
+          </div>
+          <div class="vs-total" style="margin-top:60px;">총 수수료: 3% ($7.50) &mdash; 40% 절약!</div>
+        </div>
+      </div>
+
+      <!-- Fee bar comparison -->
+      <div class="fee-compare-box">
+        <h3 style="font-size:16px; font-weight:700; margin-bottom:20px;">$250 상당 교환 시 수수료 비교</h3>
+        <div class="fee-bar-row">
+          <div class="fee-bar-label" style="color:#F87171;">판매+재구매</div>
+          <div class="fee-bar-track">
+            <div class="fee-bar-fill old">$12.50 (5%)</div>
+          </div>
+          <div class="fee-bar-save red">-$12.50</div>
+        </div>
+        <div class="fee-bar-row">
+          <div class="fee-bar-label" style="color:#22D3EE;">직접 교환</div>
+          <div class="fee-bar-track">
+            <div class="fee-bar-fill new">$7.50 (3%)</div>
+          </div>
+          <div class="fee-bar-save green">$5 절약</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 2. 교환 플로우 ===== -->
+    <div class="section">
+      <div class="section-label">Swap Flow</div>
+      <h2>교환 진행 과정</h2>
+      <p class="desc">사용자가 교환 오퍼를 만들고 상대방이 수락하는 5단계</p>
+
+      <div class="flow-diagram">
+        <h3>🔄 교환 플로우</h3>
+        <div class="flow-steps">
+
+          <!-- Step 1 -->
+          <div class="flow-step">
+            <div class="flow-step-line">
+              <div class="flow-step-icon">📋</div>
+              <div class="flow-step-connector"></div>
+            </div>
+            <div class="flow-step-body">
+              <h4>1단계: 내 조각 선택</h4>
+              <p>포트폴리오에서 교환하고 싶은 조각을 선택하고 수량을 정합니다</p>
+              <div class="flow-step-detail">
+                <div class="swap-visual">
+                  <div class="swap-party give">
+                    <div class="sp-label">내가 줄 것</div>
+                    <div class="sp-icon">🔥</div>
+                    <div class="sp-name">리자몽 1판</div>
+                    <div class="sp-amount">5조각 (250 USDC)</div>
+                  </div>
+                  <div class="swap-arrow-center">
+                    <div class="swap-arrow-icon">&rarr;</div>
+                  </div>
+                  <div class="swap-party get" style="opacity:0.3;">
+                    <div class="sp-label">받고 싶은 것</div>
+                    <div class="sp-icon">❓</div>
+                    <div class="sp-name">아직 미선택</div>
+                    <div class="sp-amount">-</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="flow-step">
+            <div class="flow-step-line">
+              <div class="flow-step-icon">🎯</div>
+              <div class="flow-step-connector"></div>
+            </div>
+            <div class="flow-step-body">
+              <h4>2단계: 원하는 자산 선택</h4>
+              <p>마켓에서 받고 싶은 자산과 수량을 선택합니다</p>
+              <div class="flow-step-detail">
+                <div class="swap-visual">
+                  <div class="swap-party give">
+                    <div class="sp-label">내가 줄 것</div>
+                    <div class="sp-icon">🔥</div>
+                    <div class="sp-name">리자몽 1판</div>
+                    <div class="sp-amount">5조각 (250 USDC)</div>
+                  </div>
+                  <div class="swap-arrow-center">
+                    <div class="swap-arrow-icon">⇄</div>
+                  </div>
+                  <div class="swap-party get">
+                    <div class="sp-label">받고 싶은 것</div>
+                    <div class="sp-icon">💜</div>
+                    <div class="sp-name">BTS PROOF 앨범</div>
+                    <div class="sp-amount">3조각 (240 USDC)</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="flow-step">
+            <div class="flow-step-line">
+              <div class="flow-step-icon">📝</div>
+              <div class="flow-step-connector"></div>
+            </div>
+            <div class="flow-step-body">
+              <h4>3단계: 오퍼 등록</h4>
+              <p>수수료를 확인하고 교환 오퍼를 마켓에 등록합니다. 다른 사용자들이 이 오퍼를 볼 수 있습니다.</p>
+              <div class="flow-step-detail" style="font-size:14px; color:var(--text-secondary);">
+                <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <span>제공: 리자몽 5조각</span><span style="color:var(--text);">250 USDC</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <span>요청: BTS 3조각</span><span style="color:var(--text);">240 USDC</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <span>교환 수수료 (1.5% x 2)</span><span style="color:#FBBF24;">7.35 USDC</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:8px 0 0; font-weight:700;">
+                  <span style="color:var(--accent-light);">판매+재구매 대비 절약</span><span style="color:var(--accent-light);">$5.15</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="flow-step">
+            <div class="flow-step-line">
+              <div class="flow-step-icon">🤝</div>
+              <div class="flow-step-connector"></div>
+            </div>
+            <div class="flow-step-body">
+              <h4>4단계: 매칭 & 수락</h4>
+              <p>BTS 조각을 가진 사용자가 오퍼를 보고 수락합니다. 또는 기존 오퍼 중 나에게 맞는 것을 수락할 수도 있습니다.</p>
+              <div class="flow-step-detail">
+                <div class="match-flow">
+                  <div class="match-card">
+                    <h4 style="color:#F472B6;">🅰 오퍼 생성자 (나)</h4>
+                    <div class="match-item">
+                      <span class="mi-icon">🔥</span>
+                      <span class="mi-text">리자몽 1판</span>
+                      <span class="mi-count">5조각 보냄</span>
+                    </div>
+                  </div>
+                  <div class="match-arrow">
+                    <span class="match-arrow-icon">⇄</span>
+                  </div>
+                  <div class="match-card">
+                    <h4 style="color:#22D3EE;">🅱 수락자 (상대방)</h4>
+                    <div class="match-item">
+                      <span class="mi-icon">💜</span>
+                      <span class="mi-text">BTS PROOF</span>
+                      <span class="mi-count">3조각 보냄</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="flow-step">
+            <div class="flow-step-line">
+              <div class="flow-step-icon">✅</div>
+            </div>
+            <div class="flow-step-body">
+              <h4>5단계: 블록체인 교환 실행</h4>
+              <p>스마트 컨트랙트가 양쪽의 조각을 동시에 교환합니다. 한쪽만 보내지는 일은 절대 없습니다.</p>
+              <div class="flow-step-detail">
+                <div class="sc-flow">
+                  <div class="sc-node user">
+                    <div class="sc-icon">👤</div>
+                    <div class="sc-label">수락 클릭</div>
+                    <div class="sc-detail">사용자 확인</div>
+                  </div>
+                  <div class="sc-arrow">&rarr;</div>
+                  <div class="sc-node contract">
+                    <div class="sc-icon">📜</div>
+                    <div class="sc-label">스마트 컨트랙트</div>
+                    <div class="sc-detail">양쪽 검증</div>
+                  </div>
+                  <div class="sc-arrow">&rarr;</div>
+                  <div class="sc-node chain">
+                    <div class="sc-icon">⛓️</div>
+                    <div class="sc-label">Base 블록체인</div>
+                    <div class="sc-detail">동시 교환 실행</div>
+                  </div>
+                  <div class="sc-arrow">&rarr;</div>
+                  <div class="sc-node result">
+                    <div class="sc-icon">🎉</div>
+                    <div class="sc-label">교환 완료</div>
+                    <div class="sc-detail">포트폴리오 반영</div>
+                  </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top:16px; padding:14px 18px;">
+                  <div class="hl-icon">🔐</div>
+                  <div class="hl-text">
+                    <h4 style="font-size:14px;">원자적 교환 (Atomic Swap)</h4>
+                    <p style="font-size:13px;">스마트 컨트랙트가 "A가 보내고 B가 보내는" 것을 <strong>하나의 트랜잭션</strong>으로 처리합니다.
+                    한쪽만 보내고 상대가 안 보내는 사기가 구조적으로 불가능합니다.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 3. Collection System ===== -->
+    <div class="section">
+      <div class="section-label">Collection</div>
+      <h2>컬렉션 시스템</h2>
+      <p class="desc">같은 카테고리의 조각을 모아 컬렉션을 완성하면 교환 욕구가 생깁니다</p>
+
+      <div class="collection-grid">
+        <div class="collection-card">
+          <div class="cc-icon">⚡</div>
+          <div class="cc-name">Pokemon Masters</div>
+          <div class="collection-slots">
+            <div class="slot filled">✓</div>
+            <div class="slot empty">?</div>
+          </div>
+          <div class="cc-status partial">1/2 수집 &mdash; 교환으로 완성!</div>
+        </div>
+        <div class="collection-card">
+          <div class="cc-icon">🎵</div>
+          <div class="cc-name">K-Pop Legends</div>
+          <div class="collection-slots">
+            <div class="slot filled">✓</div>
+            <div class="slot empty">?</div>
+          </div>
+          <div class="cc-status partial">1/2 수집</div>
+        </div>
+        <div class="collection-card">
+          <div class="cc-icon">💎</div>
+          <div class="cc-name">Luxury Vault</div>
+          <div class="collection-slots">
+            <div class="slot empty">?</div>
+            <div class="slot empty">?</div>
+          </div>
+          <div class="cc-status" style="color:var(--text-muted);">0/2 수집</div>
+        </div>
+        <div class="collection-card">
+          <div class="cc-icon">🎨</div>
+          <div class="cc-name">Art & Collectibles</div>
+          <div class="collection-slots">
+            <div class="slot filled">✓</div>
+            <div class="slot filled">✓</div>
+          </div>
+          <div class="cc-status complete">완성! 🎉</div>
+        </div>
+        <div class="collection-card">
+          <div class="cc-icon">🎤</div>
+          <div class="cc-name">Music Royalties</div>
+          <div class="collection-slots">
+            <div class="slot empty">?</div>
+            <div class="slot empty">?</div>
+          </div>
+          <div class="cc-status" style="color:var(--text-muted);">0/2 수집</div>
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <div class="hl-icon">🧩</div>
+        <div class="hl-text">
+          <h4>스티커 앨범 효과</h4>
+          <p>
+            빈 슬롯(?)이 보이면 <strong>채우고 싶은 심리</strong>가 생깁니다.
+            "리자몽은 있는데 피카츄가 없네? 누가 교환해줄까?" &mdash;
+            이것이 사용자가 자발적으로 교환을 원하게 만드는 핵심 동기입니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 4. 본사 수익 ===== -->
+    <div class="section">
+      <div class="section-label">Platform Revenue</div>
+      <h2>교환 시 본사 수익 구조</h2>
+      <p class="desc">교환 한 건당 양쪽에서 각 1.5%, 총 3%의 수수료 수익 발생</p>
+
+      <div class="flow-diagram" style="background:linear-gradient(135deg, var(--bg-card), rgba(245,158,11,0.03));">
+        <h3>💰 수수료 흐름</h3>
+        <div class="sc-flow" style="justify-content:center;">
+          <div class="sc-node user">
+            <div class="sc-icon">👤</div>
+            <div class="sc-label">오퍼 생성자</div>
+            <div class="sc-detail" style="color:#FBBF24;">수수료 1.5%</div>
+          </div>
+          <div class="sc-arrow">&rarr;</div>
+          <div class="sc-node" style="background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25);">
+            <div class="sc-icon">🏦</div>
+            <div class="sc-label" style="color:#FBBF24;">본사 지갑</div>
+            <div class="sc-detail">총 3% 수집</div>
+          </div>
+          <div class="sc-arrow">&larr;</div>
+          <div class="sc-node user">
+            <div class="sc-icon">👤</div>
+            <div class="sc-label">수락자</div>
+            <div class="sc-detail" style="color:#FBBF24;">수수료 1.5%</div>
+          </div>
+        </div>
+
+        <div style="margin-top:24px; padding:20px; background:rgba(255,255,255,0.03); border-radius:14px;">
+          <div style="font-size:14px; font-weight:600; margin-bottom:12px;">월 교환 시뮬레이션 (1,000명 기준)</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; text-align:center;">
+            <div>
+              <div style="font-size:13px; color:var(--text-muted);">월 교환 건수</div>
+              <div style="font-size:22px; font-weight:800; color:#22D3EE;">~200건</div>
+            </div>
+            <div>
+              <div style="font-size:13px; color:var(--text-muted);">평균 교환 가치</div>
+              <div style="font-size:22px; font-weight:800; color:#22D3EE;">$300</div>
+            </div>
+            <div>
+              <div style="font-size:13px; color:var(--text-muted);">월 교환 수수료 수익</div>
+              <div style="font-size:22px; font-weight:800; color:var(--accent-light);">$1,800</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <div class="hl-icon">📊</div>
+        <div class="hl-text">
+          <h4>교환은 양쪽 다 이득</h4>
+          <p>
+            <strong>사용자:</strong> 판매+재구매(5%) 대신 교환(3%)으로 40% 절약<br>
+            <strong>본사:</strong> 교환이 없었으면 발생하지 않았을 새로운 수익원. 교환이 활성화될수록 거래 빈도가 올라가 전체 수수료 수익 증가.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>PieceMarket &middot; Swap System Architecture &middot; Built on Base L2</p>
+      <p style="margin-top:6px;">Confidential &middot; 2026</p>
+    </div>
+
+  </div>
+</body>
+</html>

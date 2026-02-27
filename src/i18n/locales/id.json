@@ -284,5 +284,22 @@
     "noFractions": "Beli pecahan terlebih dahulu untuk mulai menukar!",
     "successTitle": "Tukar Berhasil!",
     "backToSwaps": "Kembali ke Pasar Tukar"
+  },
+  "docs": {
+    "title": "Dokumen",
+    "subtitle": "Model bisnis, arsitektur sistem, dan panduan proyek untuk presentasi",
+    "note": "Dokumen akan dibuka di tab browser baru",
+    "business-model": {
+      "title": "Model Bisnis & Biaya",
+      "desc": "Struktur biaya, model pendapatan, alur transaksi, biaya infrastruktur"
+    },
+    "requirements": {
+      "title": "Panduan Persyaratan",
+      "desc": "7 persyaratan utama dijelaskan dengan mudah untuk non-developer"
+    },
+    "swap": {
+      "title": "Arsitektur Sistem Tukar",
+      "desc": "Cara kerja sistem tukar pecahan"
+    }
   }
 }

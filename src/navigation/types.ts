@@ -44,6 +44,7 @@ export type ProfileStackParamList = {
   LanguageSettings: undefined;
   WalletDetail: undefined;
   SellerRegistration: undefined;
+  Docs: undefined;
 };
 
 export type SwapStackParamList = {

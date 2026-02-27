@@ -284,5 +284,22 @@
     "noFractions": "Buy some fractions first to start swapping!",
     "successTitle": "Swap Complete!",
     "backToSwaps": "Back to Swap Market"
+  },
+  "docs": {
+    "title": "Documents",
+    "subtitle": "Business model, system architecture, and project guides for presentation",
+    "note": "Documents open in a new browser tab",
+    "business-model": {
+      "title": "Business Model & Costs",
+      "desc": "Fee structure, revenue model, transaction flow, infrastructure costs"
+    },
+    "requirements": {
+      "title": "Requirements Guide",
+      "desc": "7 key requirements explained simply for non-developers"
+    },
+    "swap": {
+      "title": "Swap System Architecture",
+      "desc": "How the fraction swap/exchange system works"
+    }
   }
 }
