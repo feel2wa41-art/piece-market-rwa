@@ -193,6 +193,9 @@
       <button class="doc-tab" onclick="switchDoc('swap-structure')">
         <span class="tab-emoji">🔄</span> 교환 구조도
       </button>
+      <button class="doc-tab" onclick="switchDoc('roadmap')">
+        <span class="tab-emoji">🚀</span> 프로덕션 로드맵
+      </button>
     </div>
 
     <button class="open-new" onclick="openInNewTab()" title="새 탭에서 열기">↗ 새 탭</button>
@@ -202,6 +205,7 @@
     <iframe id="frame-business-model" class="active" src="business-model.html"></iframe>
     <iframe id="frame-requirements-guide" src="requirements-guide.html" loading="lazy"></iframe>
     <iframe id="frame-swap-structure" src="swap-structure.html" loading="lazy"></iframe>
+    <iframe id="frame-roadmap" src="roadmap.html" loading="lazy"></iframe>
   </div>
 
   <script>
@@ -217,7 +221,7 @@
       // Toggle tabs
       document.querySelectorAll('.doc-tab').forEach(t => t.classList.remove('active'));
       const tabs = document.querySelectorAll('.doc-tab');
-      const docMap = ['business-model', 'requirements-guide', 'swap-structure'];
+      const docMap = ['business-model', 'requirements-guide', 'swap-structure', 'roadmap'];
       const idx = docMap.indexOf(docId);
       if (idx >= 0) tabs[idx].classList.add('active');
     }
@@ -231,6 +235,7 @@
       if (e.key === '1') switchDoc('business-model');
       if (e.key === '2') switchDoc('requirements-guide');
       if (e.key === '3') switchDoc('swap-structure');
+      if (e.key === '4') switchDoc('roadmap');
     });
   </script>
 </body>

@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PieceMarket - Production Roadmap</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    :root {
+      --primary: #2563EB;
+      --primary-light: #3B82F6;
+      --primary-dark: #1D4ED8;
+      --accent: #10B981;
+      --accent-light: #34D399;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --purple: #8B5CF6;
+      --pink: #EC4899;
+      --cyan: #06B6D4;
+      --orange: #F97316;
+      --bg: #0F172A;
+      --bg-card: #1E293B;
+      --bg-card-hover: #334155;
+      --text: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --border: #334155;
+      --glow-blue: rgba(37, 99, 235, 0.3);
+      --glow-green: rgba(16, 185, 129, 0.3);
+      --glow-purple: rgba(139, 92, 246, 0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 60% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px 60px;
+    }
+
+    /* ===== Header ===== */
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .logo-icon {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--primary), var(--purple));
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 8px 32px var(--glow-blue);
+    }
+
+    .logo-text {
+      font-size: 28px; font-weight: 800;
+      background: linear-gradient(135deg, var(--text) 0%, var(--text-secondary) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .header h1 {
+      font-size: 38px; font-weight: 900; line-height: 1.15; margin-bottom: 10px;
+      background: linear-gradient(135deg, #fff 30%, var(--primary-light) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .header .subtitle { font-size: 17px; color: var(--text-secondary); max-width: 700px; margin: 0 auto; }
+
+    .badge {
+      display: inline-block; padding: 6px 16px; border-radius: 50px;
+      font-size: 13px; font-weight: 600; margin-top: 14px;
+    }
+    .badge-green {
+      background: rgba(16, 185, 129, 0.15); color: var(--accent-light);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .badge-blue {
+      background: rgba(37, 99, 235, 0.15); color: var(--primary-light);
+      border: 1px solid rgba(37, 99, 235, 0.3);
+    }
+
+    /* ===== Tab Navigation ===== */
+    .tab-nav {
+      display: flex; gap: 4px; margin-bottom: 36px;
+      background: var(--bg-card); padding: 6px;
+      border-radius: 16px; border: 1px solid var(--border);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tab-nav::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      flex: 1; min-width: 120px;
+      padding: 14px 16px; border: none;
+      background: transparent; color: var(--text-muted);
+      font-family: inherit; font-size: 14px; font-weight: 600;
+      border-radius: 12px; cursor: pointer;
+      transition: all 0.25s ease; white-space: nowrap;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .tab-btn:hover { color: var(--text-secondary); background: rgba(255,255,255,0.04); }
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff; box-shadow: 0 4px 20px var(--glow-blue);
+    }
+    .tab-btn .tab-icon { font-size: 18px; }
+
+    .tab-content { display: none; animation: fadeIn 0.35s ease; }
+    .tab-content.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Section ===== */
+    .section { margin-bottom: 48px; }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--primary-light); margin-bottom: 12px;
+    }
+    .section-label::before {
+      content: ''; width: 20px; height: 2px;
+      background: var(--primary); border-radius: 1px;
+    }
+    .section h2 { font-size: 30px; font-weight: 800; margin-bottom: 6px; }
+    .section .desc { color: var(--text-secondary); font-size: 15px; margin-bottom: 28px; }
+
+    /* ===== Current Status Banner ===== */
+    .status-banner {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(37, 99, 235, 0.1));
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 20px; padding: 32px;
+      margin-bottom: 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+    }
+
+    .status-item { text-align: center; }
+    .status-item .status-icon { font-size: 32px; margin-bottom: 8px; }
+    .status-item .status-label { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
+    .status-item .status-value { font-size: 20px; font-weight: 800; }
+    .status-item .status-sub { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+    /* ===== Timeline ===== */
+    .timeline { position: relative; padding-left: 40px; }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 15px; top: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, var(--accent), var(--primary), var(--purple), var(--pink), var(--orange), var(--danger));
+      border-radius: 3px;
+    }
+
+    .timeline-phase {
+      position: relative;
+      margin-bottom: 32px;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -33px; top: 24px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 800; color: white;
+      z-index: 2;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+    .timeline-dot.done { background: var(--accent); }
+    .timeline-dot.current { background: var(--primary); animation: pulse 2s ease-in-out infinite; }
+    .timeline-dot.upcoming { background: var(--bg-card-hover); border: 2px solid var(--text-muted); color: var(--text-muted); }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5); }
+      50% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+    }
+
+    .phase-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      transition: all 0.3s ease;
+    }
+    .phase-card:hover {
+      border-color: var(--primary);
+      transform: translateX(4px);
+    }
+    .phase-card.done-card {
+      border-color: rgba(16, 185, 129, 0.3);
+      background: linear-gradient(135deg, var(--bg-card), rgba(16, 185, 129, 0.03));
+    }
+    .phase-card.current-card {
+      border-color: rgba(37, 99, 235, 0.4);
+      background: linear-gradient(135deg, var(--bg-card), rgba(37, 99, 235, 0.05));
+      box-shadow: 0 4px 30px rgba(37, 99, 235, 0.1);
+    }
+
+    .phase-header {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 16px;
+    }
+    .phase-tag {
+      padding: 4px 12px; border-radius: 8px;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .phase-tag.done-tag { background: rgba(16, 185, 129, 0.15); color: var(--accent-light); }
+    .phase-tag.current-tag { background: rgba(37, 99, 235, 0.15); color: var(--primary-light); }
+    .phase-tag.upcoming-tag { background: rgba(100, 116, 139, 0.15); color: var(--text-muted); }
+
+    .phase-title {
+      font-size: 20px; font-weight: 800;
+    }
+    .phase-period {
+      margin-left: auto;
+      font-size: 13px; font-weight: 600; color: var(--text-muted);
+      background: rgba(255,255,255,0.04);
+      padding: 4px 12px; border-radius: 8px;
+    }
+    .phase-desc {
+      color: var(--text-secondary); font-size: 14px;
+      margin-bottom: 18px; line-height: 1.7;
+    }
+
+    .phase-tasks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .phase-task {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .phase-task .task-check { flex-shrink: 0; margin-top: 1px; }
+    .phase-task .task-check.done { color: var(--accent); }
+    .phase-task .task-check.pending { color: var(--text-muted); }
+
+    .phase-why {
+      margin-top: 16px;
+      padding: 14px 18px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.06), rgba(37, 99, 235, 0.06));
+      border: 1px solid rgba(139, 92, 246, 0.15);
+      border-radius: 12px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .phase-why strong { color: var(--purple); font-weight: 700; }
+
+    /* ===== STO Context Cards ===== */
+    .sto-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .sto-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 26px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .sto-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--primary);
+    }
+    .sto-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 3px;
+    }
+    .sto-card:nth-child(1)::before { background: linear-gradient(90deg, var(--primary), var(--cyan)); }
+    .sto-card:nth-child(2)::before { background: linear-gradient(90deg, var(--accent), var(--accent-light)); }
+    .sto-card:nth-child(3)::before { background: linear-gradient(90deg, var(--purple), #A78BFA); }
+    .sto-card:nth-child(4)::before { background: linear-gradient(90deg, var(--orange), var(--warning)); }
+
+    .sto-card .card-icon { font-size: 28px; margin-bottom: 12px; }
+    .sto-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+    .sto-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+    .sto-card .highlight {
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .sto-card .highlight strong { color: var(--primary-light); }
+
+    /* ===== Comparison Table ===== */
+    .compare-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .compare-table th {
+      background: var(--bg-card);
+      padding: 16px 20px;
+      text-align: left;
+      font-size: 14px; font-weight: 700;
+      border-bottom: 1px solid var(--border);
+    }
+    .compare-table th:first-child { width: 30%; }
+    .compare-table td {
+      padding: 14px 20px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+    }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .compare-table .label-col {
+      font-weight: 600; color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* ===== Big Number Stats ===== */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .stat-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .stat-box:hover { border-color: var(--primary); transform: translateY(-2px); }
+    .stat-box .stat-num {
+      font-size: 32px; font-weight: 900;
+      background: linear-gradient(135deg, var(--primary-light), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .stat-box .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+    .stat-box .stat-sub { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+    /* ===== Gantt-like Progress ===== */
+    .gantt-container { margin-bottom: 32px; }
+    .gantt-header {
+      display: grid;
+      grid-template-columns: 180px repeat(6, 1fr);
+      gap: 2px;
+      margin-bottom: 8px;
+    }
+    .gantt-header span {
+      font-size: 11px; font-weight: 600; color: var(--text-muted);
+      text-align: center;
+      padding: 8px 4px;
+    }
+    .gantt-header span:first-child { text-align: left; }
+
+    .gantt-row {
+      display: grid;
+      grid-template-columns: 180px repeat(6, 1fr);
+      gap: 2px;
+      margin-bottom: 4px;
+      align-items: center;
+    }
+    .gantt-label {
+      font-size: 13px; font-weight: 600;
+      color: var(--text);
+      padding: 10px 0;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .gantt-label .g-icon { font-size: 15px; }
+    .gantt-cell {
+      height: 36px;
+      border-radius: 6px;
+      position: relative;
+    }
+    .gantt-bar {
+      position: absolute;
+      top: 4px; bottom: 4px;
+      border-radius: 5px;
+      opacity: 0.85;
+    }
+    .gantt-bar.done { opacity: 0.5; }
+
+    /* ===== Strategy Cards ===== */
+    .strategy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    .strategy-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .strategy-card:hover { border-color: var(--primary); transform: translateY(-3px); }
+    .strategy-card .s-icon { font-size: 36px; margin-bottom: 14px; }
+    .strategy-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .strategy-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+    .strategy-card .s-action {
+      margin-top: 14px; padding: 8px 14px;
+      background: rgba(37, 99, 235, 0.1);
+      border-radius: 8px; font-size: 12px; font-weight: 600;
+      color: var(--primary-light);
+    }
+
+    /* ===== Risk/Milestone ===== */
+    .milestone-list { list-style: none; }
+    .milestone-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 18px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+    }
+    .milestone-item:hover { border-color: var(--primary); }
+    .milestone-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .milestone-icon.green { background: rgba(16, 185, 129, 0.15); }
+    .milestone-icon.blue { background: rgba(37, 99, 235, 0.15); }
+    .milestone-icon.purple { background: rgba(139, 92, 246, 0.15); }
+    .milestone-icon.orange { background: rgba(249, 115, 22, 0.15); }
+    .milestone-info h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .milestone-info p { font-size: 13px; color: var(--text-secondary); }
+    .milestone-date {
+      margin-left: auto; font-size: 12px; font-weight: 600;
+      color: var(--text-muted); white-space: nowrap; padding-top: 2px;
+    }
+
+    /* ===== Info Box ===== */
+    .info-box {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(139, 92, 246, 0.08));
+      border: 1px solid rgba(37, 99, 235, 0.2);
+      border-radius: 16px; padding: 24px;
+      margin-top: 24px;
+    }
+    .info-box h4 {
+      font-size: 15px; font-weight: 700; margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .info-box p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+
+    /* ===== Mobile ===== */
+    @media (max-width: 768px) {
+      .header h1 { font-size: 26px; }
+      .status-banner { grid-template-columns: 1fr; gap: 16px; }
+      .phase-tasks { grid-template-columns: 1fr; }
+      .sto-grid { grid-template-columns: 1fr; }
+      .stat-row { grid-template-columns: 1fr 1fr; }
+      .strategy-grid { grid-template-columns: 1fr; }
+      .gantt-container { overflow-x: auto; }
+      .gantt-header, .gantt-row { min-width: 700px; }
+      .phase-header { flex-wrap: wrap; }
+      .phase-period { margin-left: 0; margin-top: 4px; }
+      .compare-table { font-size: 13px; }
+      .compare-table th, .compare-table td { padding: 10px 12px; }
+      .milestone-item { flex-wrap: wrap; }
+      .milestone-date { margin-left: 54px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">P</div>
+      <span class="logo-text">PieceMarket</span>
+    </div>
+    <h1>Production Roadmap</h1>
+    <p class="subtitle">
+      데모 MVP에서 실제 STO 플랫폼으로의 전환 로드맵<br>
+      투자자, 셀러, 개발팀을 위한 단계별 실행 계획
+    </p>
+    <span class="badge badge-blue">2026 Production Plan</span>
+  </div>
+
+  <!-- Current Status -->
+  <div class="status-banner">
+    <div class="status-item">
+      <div class="status-icon">&#x2705;</div>
+      <div class="status-label">현재 상태</div>
+      <div class="status-value" style="color: var(--accent-light)">데모 MVP 완성</div>
+      <div class="status-sub">4탭 UI, 구매, 교환, 어드민 구현 완료</div>
+    </div>
+    <div class="status-item">
+      <div class="status-icon">&#x1F3AF;</div>
+      <div class="status-label">다음 목표</div>
+      <div class="status-value" style="color: var(--primary-light)">블록체인 연동</div>
+      <div class="status-sub">ERC-1155 스마트 계약 + Base L2 배포</div>
+    </div>
+    <div class="status-item">
+      <div class="status-icon">&#x1F4C5;</div>
+      <div class="status-label">목표 시점</div>
+      <div class="status-value" style="color: var(--warning)">2026 상반기</div>
+      <div class="status-sub">STO 법제화에 맞춘 선제적 준비</div>
+    </div>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('overview')">
+      <span class="tab-icon">&#x1F5FA;&#xFE0F;</span> 전체 로드맵
+    </button>
+    <button class="tab-btn" onclick="switchTab('timeline')">
+      <span class="tab-icon">&#x23F1;&#xFE0F;</span> 단계별 상세
+    </button>
+    <button class="tab-btn" onclick="switchTab('sto')">
+      <span class="tab-icon">&#x1F3DB;&#xFE0F;</span> STO 시장 기회
+    </button>
+    <button class="tab-btn" onclick="switchTab('strategy')">
+      <span class="tab-icon">&#x1F9ED;</span> 전략적 시사점
+    </button>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- TAB 1: Overview -->
+  <!-- ============================================ -->
+  <div id="tab-overview" class="tab-content active">
+
+    <div class="section">
+      <div class="section-label">BIG PICTURE</div>
+      <h2>전환 로드맵 한눈에 보기</h2>
+      <p class="desc">데모에서 프로덕션까지, 6단계로 나눈 실행 계획입니다. 각 Phase는 순차적으로 진행되며, 일부는 병렬 작업이 가능합니다.</p>
+    </div>
+
+    <!-- Gantt Chart -->
+    <div class="gantt-container">
+      <div class="gantt-header">
+        <span></span>
+        <span>Q1 '26</span>
+        <span>Q2 '26</span>
+        <span>Q3 '26</span>
+        <span>Q4 '26</span>
+        <span>Q1 '27</span>
+        <span>Q2 '27</span>
+      </div>
+
+      <!-- Phase 0: Done -->
+      <div class="gantt-row">
+        <div class="gantt-label"><span class="g-icon">&#x2705;</span> 데모 MVP</div>
+        <div class="gantt-cell"><div class="gantt-bar done" style="left:0%;right:40%;background:var(--accent);"></div></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+      </div>
+
+      <!-- Phase A -->
+      <div class="gantt-row">
+        <div class="gantt-label"><span class="g-icon">&#x26D3;&#xFE0F;</span> A. 블록체인</div>
+        <div class="gantt-cell"><div class="gantt-bar" style="left:40%;right:0%;background:linear-gradient(90deg,var(--primary),var(--cyan));"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar" style="left:0%;right:0%;background:linear-gradient(90deg,var(--primary),var(--cyan));"></div></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+      </div>
+
+      <!-- Phase B -->
+      <div class="gantt-row">
+        <div class="gantt-label"><span class="g-icon">&#x1F513;</span> B. 지갑 & 인증</div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar" style="left:0%;right:0%;background:linear-gradient(90deg,var(--accent),var(--accent-light));"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar" style="left:0%;right:50%;background:linear-gradient(90deg,var(--accent),var(--accent-light));"></div></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+      </div>
+
+      <!-- Phase C -->
+      <div class="gantt-row">
+        <div class="gantt-label"><span class="g-icon">&#x1F4B3;</span> C. 결제 연동</div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar" style="left:30%;right:0%;background:linear-gradient(90deg,var(--purple),#A78BFA);"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar" style="left:0%;right:0%;background:linear-gradient(90deg,var(--purple),#A78BFA);"></div></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+      </div>
+
+      <!-- Phase D -->
+      <div class="gantt-row">
+        <div class="gantt-label"><span class="g-icon">&#x1F5C4;&#xFE0F;</span> D. 백엔드 & DB</div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar" style="left:0%;right:0%;background:linear-gradient(90deg,var(--orange),var(--warning));"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar" style="left:0%;right:30%;background:linear-gradient(90deg,var(--orange),var(--warning));"></div></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+      </div>
+
+      <!-- Phase E -->
+      <div class="gantt-row">
+        <div class="gantt-label"><span class="g-icon">&#x1F4C8;</span> E. 2차 마켓</div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar" style="left:0%;right:0%;background:linear-gradient(90deg,var(--pink),#F472B6);"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar" style="left:0%;right:50%;background:linear-gradient(90deg,var(--pink),#F472B6);"></div></div>
+        <div class="gantt-cell"></div>
+      </div>
+
+      <!-- Phase F -->
+      <div class="gantt-row">
+        <div class="gantt-label"><span class="g-icon">&#x2696;&#xFE0F;</span> F. 법률 & 규제</div>
+        <div class="gantt-cell"><div class="gantt-bar" style="left:20%;right:0%;background:linear-gradient(90deg,var(--danger),#F87171);opacity:0.4;"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar" style="left:0%;right:0%;background:linear-gradient(90deg,var(--danger),#F87171);opacity:0.6;"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar" style="left:0%;right:0%;background:linear-gradient(90deg,var(--danger),#F87171);opacity:0.7;"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar" style="left:0%;right:0%;background:linear-gradient(90deg,var(--danger),#F87171);opacity:0.8;"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar" style="left:0%;right:0%;background:linear-gradient(90deg,var(--danger),#F87171);"></div></div>
+        <div class="gantt-cell"></div>
+      </div>
+    </div>
+
+    <!-- Key Stats -->
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="stat-num">6</div>
+        <div class="stat-label">개발 Phase</div>
+        <div class="stat-sub">A ~ F 단계</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">~12</div>
+        <div class="stat-label">예상 개월</div>
+        <div class="stat-sub">프로덕션 전환까지</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">$0.01</div>
+        <div class="stat-label">거래당 가스비</div>
+        <div class="stat-sub">Base L2 기반</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">3</div>
+        <div class="stat-label">국가 지원</div>
+        <div class="stat-sub">KR / EN / ID</div>
+      </div>
+    </div>
+
+    <!-- STO Market Context -->
+    <div class="info-box">
+      <h4>&#x1F4A1; STO 법제화와의 타이밍</h4>
+      <p>
+        2025년 11월, 자본시장법 및 전자증권법 개정안이 국회 정무위 소위를 통과했습니다.
+        <strong style="color:var(--warning)">2026년 상반기</strong>에는 정식 ATS(대체거래소) 인가와 공모형 상품 출시가 본격화될 것으로 예상됩니다.
+        PieceMarket은 이 시점에 맞춰 블록체인 연동과 법적 구조를 완비하는 것을 목표로 합니다.
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- TAB 2: Timeline Details -->
+  <!-- ============================================ -->
+  <div id="tab-timeline" class="tab-content">
+
+    <div class="section">
+      <div class="section-label">STEP BY STEP</div>
+      <h2>단계별 상세 계획</h2>
+      <p class="desc">각 Phase의 구체적인 작업 항목과 비개발자를 위한 설명입니다.</p>
+    </div>
+
+    <div class="timeline">
+
+      <!-- Phase 0: DONE -->
+      <div class="timeline-phase">
+        <div class="timeline-dot done">&#x2713;</div>
+        <div class="phase-card done-card">
+          <div class="phase-header">
+            <span class="phase-tag done-tag">&#x2705; 완료</span>
+            <span class="phase-title">데모 MVP</span>
+            <span class="phase-period">완료됨</span>
+          </div>
+          <p class="phase-desc">
+            실제 서비스처럼 동작하는 <strong>데모 앱</strong>을 완성했습니다.
+            실물 자산을 조각으로 나눠 사고팔고 교환하는 전체 흐름을,
+            실제 블록체인 없이 시뮬레이션으로 구현한 상태입니다.
+          </p>
+          <div class="phase-tasks">
+            <div class="phase-task"><span class="task-check done">&#x2713;</span> 홈/마켓/포트폴리오/프로필 화면</div>
+            <div class="phase-task"><span class="task-check done">&#x2713;</span> 자산 상세 + 조각 구매 플로우</div>
+            <div class="phase-task"><span class="task-check done">&#x2713;</span> 셀러 자산 등록 (4단계 폼)</div>
+            <div class="phase-task"><span class="task-check done">&#x2713;</span> USDC 지갑 + 잔액 관리</div>
+            <div class="phase-task"><span class="task-check done">&#x2713;</span> 어드민 대시보드 + 수익 관리</div>
+            <div class="phase-task"><span class="task-check done">&#x2713;</span> 조각 교환 시스템 (수수료 40% 절약)</div>
+            <div class="phase-task"><span class="task-check done">&#x2713;</span> 자산 인증서 (수탁/법적권리/온체인)</div>
+            <div class="phase-task"><span class="task-check done">&#x2713;</span> 3개국어 (KR/EN/ID)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase A -->
+      <div class="timeline-phase">
+        <div class="timeline-dot current">A</div>
+        <div class="phase-card current-card">
+          <div class="phase-header">
+            <span class="phase-tag current-tag">&#x1F534; 다음 단계</span>
+            <span class="phase-title">블록체인 연동</span>
+            <span class="phase-period">Q1~Q2 2026</span>
+          </div>
+          <p class="phase-desc">
+            현재 시뮬레이션인 거래를 <strong>실제 블록체인(Base L2)</strong>에서 실행하도록 전환합니다.
+            조각 NFT가 진짜 디지털 자산으로 발행되고, 소유권이 블록체인에 영구 기록됩니다.
+            <strong>가스비는 거래당 약 0.01 USDC</strong>(약 13원)로 매우 저렴합니다.
+          </p>
+          <div class="phase-tasks">
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> ERC-1155 스마트 계약 개발 및 배포</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> Paymaster 연동 (가스비 대납)</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> 실제 트랜잭션 실행 연결</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> 스마트 계약 보안 감사</div>
+          </div>
+          <div class="phase-why">
+            <strong>&#x1F4A1; 비개발자 설명:</strong> 현재 "가짜 영수증"을 주던 것을 "진짜 블록체인 영수증"으로 바꾸는 작업입니다. 이후 내 조각은 전 세계 누구나 검증 가능한 진짜 디지털 자산이 됩니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase B -->
+      <div class="timeline-phase">
+        <div class="timeline-dot upcoming">B</div>
+        <div class="phase-card">
+          <div class="phase-header">
+            <span class="phase-tag upcoming-tag">예정</span>
+            <span class="phase-title">지갑 & 본인인증</span>
+            <span class="phase-period">Q2~Q3 2026</span>
+          </div>
+          <p class="phase-desc">
+            사용자가 <strong>카카오/구글 로그인만으로 자동 생성</strong>되는 스마트 지갑을 제공합니다.
+            블록체인을 몰라도 쉽게 사용할 수 있는 "계좌 추상화(AA)" 기술을 적용합니다.
+            금융 규제 준수를 위한 본인인증(KYC)도 연동합니다.
+          </p>
+          <div class="phase-tasks">
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> AA 지갑 SDK 연동 (소셜 로그인)</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> 지갑 복구 메커니즘 구축</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> KYC 본인인증 연동</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> 다중 서명 보안 설정</div>
+          </div>
+          <div class="phase-why">
+            <strong>&#x1F4A1; 비개발자 설명:</strong> "비밀 키를 외워야 하는 어려운 지갑" 대신 "카카오톡으로 로그인하면 자동으로 만들어지는 편한 지갑"을 제공합니다. 은행 앱처럼 쉽게 사용할 수 있습니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase C -->
+      <div class="timeline-phase">
+        <div class="timeline-dot upcoming">C</div>
+        <div class="phase-card">
+          <div class="phase-header">
+            <span class="phase-tag upcoming-tag">예정</span>
+            <span class="phase-title">결제 시스템</span>
+            <span class="phase-period">Q2~Q3 2026</span>
+          </div>
+          <p class="phase-desc">
+            <strong>신용카드로 원화(KRW) 결제 &rarr; 자동으로 USDC 전환</strong>되는 시스템을 구축합니다.
+            사용자는 암호화폐를 직접 다룰 필요 없이, 일반 온라인 쇼핑처럼 결제할 수 있습니다.
+            출금(USDC &rarr; 원화) 역스왑도 지원합니다.
+          </p>
+          <div class="phase-tasks">
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> PG사 연동 (Portone/Toss)</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> KRW &rarr; USDC 자동 스왑 구현</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> USDC &rarr; KRW 출금 프로세스</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> Circle USDC on-ramp API 검토</div>
+          </div>
+          <div class="phase-why">
+            <strong>&#x1F4A1; 비개발자 설명:</strong> 쿠팡에서 물건 사듯이 신용카드로 결제하면, 뒤에서 자동으로 USDC라는 디지털 달러로 바뀌어 조각을 구매합니다. 복잡한 암호화폐 거래소 가입이 필요 없습니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase D -->
+      <div class="timeline-phase">
+        <div class="timeline-dot upcoming">D</div>
+        <div class="phase-card">
+          <div class="phase-header">
+            <span class="phase-tag upcoming-tag">예정</span>
+            <span class="phase-title">백엔드 서버 & 데이터베이스</span>
+            <span class="phase-period">Q3~Q4 2026</span>
+          </div>
+          <p class="phase-desc">
+            현재 앱 안에서만 존재하는 데이터를 <strong>안전한 서버와 데이터베이스</strong>에 저장합니다.
+            자산 등록 승인, 사용자 관리, 정산 등 운영에 필요한 핵심 시스템을 구축합니다.
+          </p>
+          <div class="phase-tasks">
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> NestJS API 서버 구축</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> PostgreSQL 데이터베이스 설계</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> 자산 검수/승인 워크플로우</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> 알림 시스템 (푸시/이메일)</div>
+          </div>
+          <div class="phase-why">
+            <strong>&#x1F4A1; 비개발자 설명:</strong> 현재는 앱을 껐다 키면 데이터가 초기화되는 "연습 모드"입니다. 이 단계에서 네이버/카카오처럼 서버에 모든 데이터가 안전하게 저장되도록 바꿉니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase E -->
+      <div class="timeline-phase">
+        <div class="timeline-dot upcoming">E</div>
+        <div class="phase-card">
+          <div class="phase-header">
+            <span class="phase-tag upcoming-tag">예정</span>
+            <span class="phase-title">2차 마켓 (P2P 거래)</span>
+            <span class="phase-period">Q4 2026 ~ Q1 2027</span>
+          </div>
+          <p class="phase-desc">
+            투자자끼리 조각을 <strong>자유롭게 사고팔 수 있는 2차 시장</strong>을 개설합니다.
+            실시간 시세 차트, 주문장(오더북), 가격 히스토리를 제공하여
+            주식 거래처럼 조각의 가치 변동을 확인하고 수익을 실현할 수 있습니다.
+          </p>
+          <div class="phase-tasks">
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> P2P 조각 거래소 (오더북)</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> 실시간 시세 차트</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> 가격 히스토리 기록</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> 판매 수수료 2% 정산 로직</div>
+          </div>
+          <div class="phase-why">
+            <strong>&#x1F4A1; 비개발자 설명:</strong> 주식시장에서 삼성전자 주식을 사고팔듯이, 포켓몬 카드 조각이나 명품 조각을 다른 투자자에게 자유롭게 팔 수 있는 "거래소"를 여는 것입니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase F -->
+      <div class="timeline-phase">
+        <div class="timeline-dot upcoming">F</div>
+        <div class="phase-card">
+          <div class="phase-header">
+            <span class="phase-tag upcoming-tag">병행 진행</span>
+            <span class="phase-title">법률 & STO 규제 대응</span>
+            <span class="phase-period">전 기간 병행</span>
+          </div>
+          <p class="phase-desc">
+            <strong>자본시장법 내 토큰증권(STO)</strong> 규제를 준수하기 위한 법적 구조를 수립합니다.
+            2025년 개정안 통과로 제도적 불확실성이 해소되는 국면이며,
+            2026년 상반기 ATS(대체거래소) 인가에 맞춰 준비합니다.
+          </p>
+          <div class="phase-tasks">
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> STO 가이드라인 법률 검토</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> 약관/개인정보처리방침 작성</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> 금융위 신고 요건 확인</div>
+            <div class="phase-task"><span class="task-check pending">&#x25CB;</span> 발행인 계좌관리기관 자격 검토</div>
+          </div>
+          <div class="phase-why">
+            <strong>&#x1F4A1; 비개발자 설명:</strong> 우리 서비스가 "불법 코인 거래소"가 아니라 "정식 인가된 금융 플랫폼"이 되기 위한 법적 절차입니다. 이 단계가 완료되어야 정식 서비스 오픈이 가능합니다.
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /timeline -->
+  </div>
+
+  <!-- ============================================ -->
+  <!-- TAB 3: STO Market -->
+  <!-- ============================================ -->
+  <div id="tab-sto" class="tab-content">
+
+    <div class="section">
+      <div class="section-label">MARKET OPPORTUNITY</div>
+      <h2>STO 시장, 왜 지금인가?</h2>
+      <p class="desc">토큰증권(STO)은 기존 증권의 '기록 방식'을 블록체인으로 바꾼 것입니다. 본질은 자본시장법 내의 증권이되, 거래와 관리의 혁신을 가져옵니다.</p>
+    </div>
+
+    <div class="sto-grid">
+      <div class="sto-card">
+        <div class="card-icon">&#x1F513;</div>
+        <h3>참여 문턱의 파괴</h3>
+        <p>고가 자산(부동산, 명품, 예술품)을 <strong>소액 단위로 쪼개어</strong> 발행할 수 있어, 자금 조달 대상이 기관에서 <strong>개인으로 대폭 확대</strong>됩니다.</p>
+        <div class="highlight">
+          <strong>PieceMarket 적용:</strong> 100만원짜리 포켓몬 카드를 100조각(1만원/조각)으로 분할하여 누구나 투자 가능
+        </div>
+      </div>
+
+      <div class="sto-card">
+        <div class="card-icon">&#x1F504;</div>
+        <h3>24시간 유동성</h3>
+        <p>매각에 수개월이 걸리던 자산을 디지털 토큰화하여 <strong>24시간 장외거래가 가능한 구조</strong>로 전환합니다. 주식시장보다도 유연한 거래 환경.</p>
+        <div class="highlight">
+          <strong>PieceMarket 적용:</strong> Base L2 블록체인 기반으로 언제 어디서든 조각 거래 가능, 가스비 ~$0.01
+        </div>
+      </div>
+
+      <div class="sto-card">
+        <div class="card-icon">&#x2699;&#xFE0F;</div>
+        <h3>운영 비용 혁신</h3>
+        <p>지분 관리, 수익 분배, 청산 절차를 <strong>스마트 계약으로 자동화</strong>하여 다수 투자자 관리 비용을 기하급수적으로 절감합니다.</p>
+        <div class="highlight">
+          <strong>PieceMarket 적용:</strong> 스마트 계약이 수수료 계산, 분배, 소유권 이전을 자동 처리
+        </div>
+      </div>
+
+      <div class="sto-card">
+        <div class="card-icon">&#x1F3DB;&#xFE0F;</div>
+        <h3>제도권 금융 안착</h3>
+        <p>2025년 11월 자본시장법/전자증권법 개정안이 국회를 통과하며 <strong>제도적 불확실성이 해소</strong>되는 국면에 진입했습니다.</p>
+        <div class="highlight">
+          <strong>기회:</strong> 2026년 상반기 ATS 인가 + 공모형 상품 출시 본격화 예상
+        </div>
+      </div>
+    </div>
+
+    <!-- STO vs REITs -->
+    <div class="section" style="margin-top:48px;">
+      <div class="section-label">COMPARISON</div>
+      <h2>STO vs 리츠(REITs) 비교</h2>
+      <p class="desc">STO는 리츠를 대체하는 것이 아니라 보완합니다. 특히 소규모/비정형 자산에서 강점을 가집니다.</p>
+    </div>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>비교 항목</th>
+          <th>&#x1F3E2; 리츠 (REITs)</th>
+          <th>&#x1F4B0; STO (토큰증권)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="label-col">&#x1F4CF; 자산 규모</span></td>
+          <td>대규모 자산 필수 (수백억 이상)</td>
+          <td><strong style="color:var(--accent-light)">소규모 단일 자산도 가능</strong></td>
+        </tr>
+        <tr>
+          <td><span class="label-col">&#x23F0; 투자 기간</span></td>
+          <td>장기 존속형 (만기 없음)</td>
+          <td><strong style="color:var(--accent-light)">만기형 구조 설계 가능</strong> (3년, 5년 등)</td>
+        </tr>
+        <tr>
+          <td><span class="label-col">&#x1F3AF; 자산 유형</span></td>
+          <td>부동산 중심</td>
+          <td><strong style="color:var(--accent-light)">부동산 + 특허 + IP + 예술품 + 원자재</strong></td>
+        </tr>
+        <tr>
+          <td><span class="label-col">&#x1F465; 최소 투자금</span></td>
+          <td>수십~수백만원</td>
+          <td><strong style="color:var(--accent-light)">1만원부터 가능</strong></td>
+        </tr>
+        <tr>
+          <td><span class="label-col">&#x1F552; 거래 시간</span></td>
+          <td>증시 개장 시간만 가능</td>
+          <td><strong style="color:var(--accent-light)">24시간 365일 거래 가능</strong></td>
+        </tr>
+        <tr>
+          <td><span class="label-col">&#x1F4B8; 수수료</span></td>
+          <td>운용보수 1~2% + 증권사 수수료</td>
+          <td><strong style="color:var(--accent-light)">플랫폼 수수료 2~5%만</strong></td>
+        </tr>
+        <tr>
+          <td><span class="label-col">&#x1F4CA; 수익 분배</span></td>
+          <td>수동 관리 (운용사 처리)</td>
+          <td><strong style="color:var(--accent-light)">스마트 계약 자동 분배</strong></td>
+        </tr>
+        <tr>
+          <td><span class="label-col">&#x1F310; 투명성</span></td>
+          <td>정기 보고서 기반</td>
+          <td><strong style="color:var(--accent-light)">블록체인 실시간 검증 가능</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="info-box" style="margin-top:32px;">
+      <h4>&#x1F4A1; 핵심 포인트</h4>
+      <p>
+        STO는 "자산의 크기와 종류에 제한 없이" 토큰화할 수 있다는 점에서 리츠와 차별화됩니다.
+        PieceMarket은 포켓몬 카드, K-Pop 굿즈, 명품 등 <strong>기존 금융 시스템이 다루지 못했던 대체 자산</strong>을 타겟으로 하여,
+        리츠가 커버하지 못하는 시장 공백을 공략합니다.
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- TAB 4: Strategy -->
+  <!-- ============================================ -->
+  <div id="tab-strategy" class="tab-content">
+
+    <div class="section">
+      <div class="section-label">STRATEGIC INSIGHTS</div>
+      <h2>투자 전략적 시사점</h2>
+      <p class="desc">PieceMarket이 STO 시장에서 선점해야 할 전략적 포지션과 실행 우선순위입니다.</p>
+    </div>
+
+    <!-- Strategy Cards -->
+    <div class="strategy-grid">
+      <div class="strategy-card">
+        <div class="s-icon">&#x1F50D;</div>
+        <h3>자산의 재발견</h3>
+        <p>포켓몬 카드, K-Pop 굿즈, 명품 등 기존에 유동화가 불가능했던 대체 자산을 디지털 토큰으로 전환</p>
+        <div class="s-action">대체 자산 카테고리 확장</div>
+      </div>
+      <div class="strategy-card">
+        <div class="s-icon">&#x1F3E6;</div>
+        <h3>직접 발행 구조</h3>
+        <p>일정 요건 갖추면 금융중개기관 없이 '발행인 계좌관리기관'으로서 직접 토큰증권 발행 가능</p>
+        <div class="s-action">금융 비용 최소화</div>
+      </div>
+      <div class="strategy-card">
+        <div class="s-icon">&#x26A1;</div>
+        <h3>선제적 타이밍</h3>
+        <p>2026년 상반기 ATS 인가 본격화에 맞춰 기술 인프라를 먼저 확보하여 시장 선점</p>
+        <div class="s-action">법제화 시점 맞춤 런칭</div>
+      </div>
+    </div>
+
+    <!-- Key Milestones -->
+    <div class="section" style="margin-top:48px;">
+      <div class="section-label">KEY MILESTONES</div>
+      <h2>핵심 마일스톤</h2>
+      <p class="desc">프로덕션 전환까지 반드시 달성해야 할 주요 이정표입니다.</p>
+    </div>
+
+    <ul class="milestone-list">
+      <li class="milestone-item">
+        <div class="milestone-icon green">&#x2705;</div>
+        <div class="milestone-info">
+          <h4>데모 MVP 완성</h4>
+          <p>전체 UX 플로우 구현 완료 — 구매, 교환, 관리, 인증서, 3개국어 지원</p>
+        </div>
+        <span class="milestone-date">&#x2713; 완료</span>
+      </li>
+      <li class="milestone-item">
+        <div class="milestone-icon blue">&#x26D3;&#xFE0F;</div>
+        <div class="milestone-info">
+          <h4>스마트 계약 배포 (Base Mainnet)</h4>
+          <p>ERC-1155 조각 NFT 발행 + Paymaster 가스비 대납 + 보안 감사 통과</p>
+        </div>
+        <span class="milestone-date">Q2 2026 목표</span>
+      </li>
+      <li class="milestone-item">
+        <div class="milestone-icon blue">&#x1F513;</div>
+        <div class="milestone-info">
+          <h4>AA 지갑 + 원화 결제 연동</h4>
+          <p>소셜 로그인 지갑 + 신용카드 KRW&rarr;USDC 자동 스왑 — "일반인도 사용 가능"</p>
+        </div>
+        <span class="milestone-date">Q3 2026 목표</span>
+      </li>
+      <li class="milestone-item">
+        <div class="milestone-icon purple">&#x2696;&#xFE0F;</div>
+        <div class="milestone-info">
+          <h4>STO 규제 준수 완료</h4>
+          <p>자본시장법 준수, 금융위 신고, ATS 연동 검토 — "합법적 금융 플랫폼"</p>
+        </div>
+        <span class="milestone-date">Q3 2026 목표</span>
+      </li>
+      <li class="milestone-item">
+        <div class="milestone-icon orange">&#x1F680;</div>
+        <div class="milestone-info">
+          <h4>정식 서비스 런칭</h4>
+          <p>실제 자산 등록 + 원화 결제 + 블록체인 거래 + 2차 마켓 — "풀 프로덕션 오픈"</p>
+        </div>
+        <span class="milestone-date">Q4 2026 ~ Q1 2027</span>
+      </li>
+    </ul>
+
+    <!-- Investment Opportunity Summary -->
+    <div class="section" style="margin-top:48px;">
+      <div class="section-label">CEO TAKEAWAYS</div>
+      <h2>CEO를 위한 핵심 요약</h2>
+    </div>
+
+    <div class="sto-grid">
+      <div class="sto-card">
+        <div class="card-icon">1&#xFE0F;&#x20E3;</div>
+        <h3>자산 유동화의 새로운 창구</h3>
+        <p>보유 자산(부동산, 특허, 라이선스 등) 중 <strong>유동화가 필요한 자산</strong>을 STO로 토큰화하여 새로운 자금 조달 경로를 확보할 수 있습니다.</p>
+      </div>
+      <div class="sto-card">
+        <div class="card-icon">2&#xFE0F;&#x20E3;</div>
+        <h3>금융 중개 비용 절감</h3>
+        <p>발행인 계좌관리기관 자격 확보 시 <strong>금융중개기관 없이 직접 발행</strong>이 가능하여, 기존 증권 발행 대비 비용을 최소화할 수 있습니다.</p>
+      </div>
+      <div class="sto-card">
+        <div class="card-icon">3&#xFE0F;&#x20E3;</div>
+        <h3>2026년이 선제적 준비의 적기</h3>
+        <p>법 개정 시행으로 <strong>정식 ATS 인가와 공모형 상품 출시</strong>가 본격화됩니다. 경쟁자보다 먼저 기술/법률 인프라를 갖추는 것이 핵심입니다.</p>
+      </div>
+      <div class="sto-card">
+        <div class="card-icon">4&#xFE0F;&#x20E3;</div>
+        <h3>대체 자산 시장의 블루오션</h3>
+        <p>부동산 STO는 리츠와 경쟁하지만, <strong>포켓몬 카드, K-Pop 굿즈, 명품</strong> 등 대체 자산은 아직 아무도 진출하지 않은 시장입니다.</p>
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-top:32px;">
+      <h4>&#x1F4CA; 예상 수익 시뮬레이션 (1,000명 활성 사용자 기준)</h4>
+      <p>
+        구매 수수료(3%) 월 $30,000 + 판매 수수료(2%) 월 $6,000 + 등록 수수료(5%) 월 $5,000 + 교환 수수료(1.5%) 월 $3,000<br>
+        <strong style="color:var(--accent-light); font-size: 18px;">= 월 약 $44,000 (약 5,700만원) 수익</strong><br><br>
+        자세한 수수료 구조와 수익 시뮬레이션은 <strong style="color:var(--primary-light)">"비즈니스 모델"</strong> 문서에서 확인할 수 있습니다.
+      </p>
+    </div>
+
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+    document.getElementById('tab-' + tabId).classList.add('active');
+
+    const tabMap = ['overview', 'timeline', 'sto', 'strategy'];
+    const idx = tabMap.indexOf(tabId);
+    if (idx >= 0) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  }
+</script>
+
+</body>
+</html>
