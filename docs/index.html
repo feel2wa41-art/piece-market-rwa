@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PieceMarket - Documents</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    :root {
+      --primary: #2563EB;
+      --primary-dark: #1D4ED8;
+      --accent: #10B981;
+      --purple: #8B5CF6;
+      --pink: #EC4899;
+      --bg: #0F172A;
+      --bg-card: #1E293B;
+      --text: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --border: #334155;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ===== Top Bar ===== */
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-right: 12px;
+    }
+
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--primary), var(--purple));
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 900; color: white;
+    }
+
+    .logo-text {
+      font-size: 16px; font-weight: 800;
+      color: var(--text);
+    }
+
+    .divider {
+      width: 1px; height: 24px;
+      background: var(--border);
+      margin: 0 4px;
+    }
+
+    .doc-tabs {
+      display: flex; gap: 6px; flex: 1;
+    }
+
+    .doc-tab {
+      padding: 8px 18px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
+    }
+
+    .doc-tab:hover {
+      color: var(--text-secondary);
+      border-color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .doc-tab.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      box-shadow: 0 2px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .doc-tab .tab-emoji { font-size: 15px; }
+
+    .open-new {
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .open-new:hover {
+      color: var(--text-secondary);
+      border-color: var(--text-muted);
+    }
+
+    /* ===== Content ===== */
+    .content {
+      flex: 1;
+      position: relative;
+    }
+
+    .content iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: none;
+    }
+
+    .content iframe.active {
+      display: block;
+    }
+
+    /* ===== Mobile ===== */
+    @media (max-width: 768px) {
+      .topbar {
+        flex-wrap: wrap;
+        padding: 10px 12px;
+        gap: 8px;
+      }
+
+      .logo { margin-right: 0; }
+      .divider { display: none; }
+
+      .doc-tabs {
+        width: 100%;
+        order: 3;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .doc-tabs::-webkit-scrollbar { display: none; }
+
+      .doc-tab {
+        padding: 7px 12px;
+        font-size: 12px;
+      }
+
+      .open-new {
+        margin-left: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="logo">
+      <div class="logo-icon">P</div>
+      <span class="logo-text">PieceMarket</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="doc-tabs">
+      <button class="doc-tab active" onclick="switchDoc('business-model')">
+        <span class="tab-emoji">💰</span> 비즈니스 모델
+      </button>
+      <button class="doc-tab" onclick="switchDoc('requirements-guide')">
+        <span class="tab-emoji">📋</span> 요구사항 가이드
+      </button>
+      <button class="doc-tab" onclick="switchDoc('swap-structure')">
+        <span class="tab-emoji">🔄</span> 교환 구조도
+      </button>
+    </div>
+
+    <button class="open-new" onclick="openInNewTab()" title="새 탭에서 열기">↗ 새 탭</button>
+  </div>
+
+  <div class="content">
+    <iframe id="frame-business-model" class="active" src="business-model.html"></iframe>
+    <iframe id="frame-requirements-guide" src="requirements-guide.html" loading="lazy"></iframe>
+    <iframe id="frame-swap-structure" src="swap-structure.html" loading="lazy"></iframe>
+  </div>
+
+  <script>
+    let currentDoc = 'business-model';
+
+    function switchDoc(docId) {
+      currentDoc = docId;
+
+      // Toggle frames
+      document.querySelectorAll('.content iframe').forEach(f => f.classList.remove('active'));
+      document.getElementById('frame-' + docId).classList.add('active');
+
+      // Toggle tabs
+      document.querySelectorAll('.doc-tab').forEach(t => t.classList.remove('active'));
+      const tabs = document.querySelectorAll('.doc-tab');
+      const docMap = ['business-model', 'requirements-guide', 'swap-structure'];
+      const idx = docMap.indexOf(docId);
+      if (idx >= 0) tabs[idx].classList.add('active');
+    }
+
+    function openInNewTab() {
+      window.open(currentDoc + '.html', '_blank');
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      if (e.key === '1') switchDoc('business-model');
+      if (e.key === '2') switchDoc('requirements-guide');
+      if (e.key === '3') switchDoc('swap-structure');
+    });
+  </script>
+</body>
+</html>

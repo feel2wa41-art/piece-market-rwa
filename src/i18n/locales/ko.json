@@ -288,6 +288,9 @@
   "docs": {
     "title": "문서 자료",
     "subtitle": "비즈니스 모델, 시스템 구조, 프로젝트 가이드 등 발표용 자료",
+    "allInOne": "전체 문서 보기",
+    "allInOneDesc": "3개 문서를 한 페이지에서 탭으로 전환하며 볼 수 있습니다",
+    "orIndividual": "또는 개별로 열기",
     "note": "문서는 새 브라우저 탭에서 열립니다",
     "business-model": {
       "title": "비즈니스 모델 & 비용 구조",

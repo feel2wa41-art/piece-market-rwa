@@ -288,6 +288,9 @@
   "docs": {
     "title": "Documents",
     "subtitle": "Business model, system architecture, and project guides for presentation",
+    "allInOne": "View All Documents",
+    "allInOneDesc": "All 3 documents in a single page with tab navigation",
+    "orIndividual": "or open individually",
     "note": "Documents open in a new browser tab",
     "business-model": {
       "title": "Business Model & Costs",

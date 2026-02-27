@@ -33,6 +33,15 @@ const DOCS = [
   },
 ];
 
+function openAllDocs() {
+  const url = '/docs/index.html';
+  if (Platform.OS === 'web') {
+    window.open(url, '_blank');
+  } else {
+    Linking.openURL(url);
+  }
+}
+
 function openDoc(file: string) {
   const url = `/docs/${file}`;
   if (Platform.OS === 'web') {
@@ -49,6 +58,21 @@ export function DocsScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scroll}>
         <Text style={styles.subtitle}>{t('docs.subtitle')}</Text>
+
+        {/* All-in-one button */}
+        <TouchableOpacity
+          style={styles.allInOne}
+          onPress={openAllDocs}
+          activeOpacity={0.7}>
+          <Text style={styles.allInOneIcon}>📑</Text>
+          <View style={styles.cardContent}>
+            <Text style={styles.allInOneTitle}>{t('docs.allInOne')}</Text>
+            <Text style={styles.allInOneDesc}>{t('docs.allInOneDesc')}</Text>
+          </View>
+          <Text style={styles.arrow}>›</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.orText}>{t('docs.orIndividual')}</Text>
 
         {DOCS.map(doc => (
           <TouchableOpacity
@@ -141,5 +165,34 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     textAlign: 'center',
     lineHeight: 18,
+  },
+  allInOne: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.primary,
+    borderRadius: BORDER_RADIUS.lg,
+    padding: SPACING.lg,
+    marginBottom: SPACING.lg,
+  },
+  allInOneIcon: {
+    fontSize: 30,
+    marginRight: SPACING.md,
+  },
+  allInOneTitle: {
+    fontSize: FONT_SIZE.md,
+    fontWeight: '700',
+    color: COLORS.white,
+    marginBottom: 2,
+  },
+  allInOneDesc: {
+    fontSize: FONT_SIZE.xs,
+    color: 'rgba(255,255,255,0.8)',
+    lineHeight: 18,
+  },
+  orText: {
+    fontSize: FONT_SIZE.xs,
+    color: COLORS.textTertiary,
+    textAlign: 'center',
+    marginBottom: SPACING.md,
   },
 });

@@ -288,6 +288,9 @@
   "docs": {
     "title": "Dokumen",
     "subtitle": "Model bisnis, arsitektur sistem, dan panduan proyek untuk presentasi",
+    "allInOne": "Lihat Semua Dokumen",
+    "allInOneDesc": "3 dokumen dalam satu halaman dengan navigasi tab",
+    "orIndividual": "atau buka satu per satu",
     "note": "Dokumen akan dibuka di tab browser baru",
     "business-model": {
       "title": "Model Bisnis & Biaya",
